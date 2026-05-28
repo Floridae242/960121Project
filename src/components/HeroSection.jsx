@@ -1,25 +1,41 @@
-import { Link } from "react-router-dom";
-
-import { Button } from "@/components/ui/button";
-import { APP_NAME } from "@/lib/app-params";
+import { motion } from "framer-motion";
 
 export default function HeroSection() {
   return (
-    <section className="rounded-3xl bg-gradient-to-r from-amber-900 to-orange-700 p-8 text-amber-50 shadow-md md:p-10">
-      <p className="text-xs uppercase tracking-[0.25em] text-amber-100">Workshop marketplace</p>
-      <h1 className="mt-3 text-4xl font-bold leading-tight md:text-5xl">{APP_NAME}</h1>
-      <p className="mt-4 max-w-2xl text-sm text-amber-100 md:text-base">
-        ตลาดนัดเวิร์กชอปทำขนมสำหรับคนรักงานฝีมือ ค้นหาคลาสเรียนจากเชฟมืออาชีพ
-        และร่วมสัมผัสศิลปะการอบขนมในพื้นที่ที่เต็มไปด้วยความอบอุ่น
-      </p>
+    <section className="relative flex items-center justify-center min-h-[50vh] md:min-h-[60vh] overflow-hidden bg-foreground">
+      <img
+        src="https://media.base44.com/images/public/6a16f2669d1f1a6f216f87e2/8056de174_generated_image.png"
+        alt="artisan bakery"
+        className="absolute inset-0 h-full w-full object-cover object-center"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-foreground/60 via-foreground/40 to-background z-10" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_40%,_hsl(var(--foreground))_100%)]" />
 
-      <div className="mt-7 flex flex-wrap gap-3">
-        <Button asChild className="bg-white text-amber-900 hover:bg-amber-100">
-          <Link to="/booking">จองคลาสเรียน</Link>
-        </Button>
-        <Button asChild variant="outline" className="border-amber-100 text-amber-100 hover:bg-amber-800">
-          <Link to="/register">สมัครสมาชิก</Link>
-        </Button>
+      <div className="relative z-20 text-center px-6 max-w-3xl">
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.6 }}
+          className="font-body text-sm md:text-base tracking-widest uppercase text-primary-foreground/60 mb-4"
+        >
+          Artisan Bakery Workshops
+        </motion.p>
+        <motion.h1
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25, duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+          className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-tight"
+        >
+          ศิลปะแห่งการนวดแป้ง
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45, duration: 0.6 }}
+          className="font-body text-base md:text-lg text-primary-foreground/70 mt-4 leading-relaxed"
+        >
+          เรียนรู้ศิลปะการทำขนมอบจากเชฟมืออาชีพ ในบรรยากาศอบอุ่นสไตล์อาร์ทิซาน
+        </motion.p>
       </div>
     </section>
   );

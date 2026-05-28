@@ -1,7 +1,11 @@
-export function queryClient() {
-  return {
-    async get(path) {
-      return { path, data: null };
-    },
-  };
-}
+import { QueryClient } from '@tanstack/react-query';
+
+
+export const queryClientInstance = new QueryClient({
+	defaultOptions: {
+		queries: {
+			refetchOnWindowFocus: false,
+			retry: 1,
+		},
+	},
+});

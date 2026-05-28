@@ -1,72 +1,127 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import HeroSection from "../components/HeroSection";
+import PopularClasses from "../components/PopularClasses";
+import WorkshopCard from "../components/WorkshopCard";
+import FilterBar from "../components/FilterBar";
+import BookingModal from "../components/BookingModal";
 
-import { fetchWorkshops } from "@/api/base44Client";
-import BookingModal from "@/components/BookingModal";
-import HeroSection from "@/components/HeroSection";
-import PopularClasses from "@/components/PopularClasses";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/AuthContext";
+const initialWorkshops = [
+  {
+    id: 1,
+    title: "โครยซองต์ มาสเตอร์คลาส",
+    emoji: "🥐",
+    category: "french",
+    description: "เรียนรู้ความลับของเลเยอร์ที่สมบูรณ์แบบและการนวดเนยสไตล์ฝรั่งเศสขนานแท้",
+    instructor: "เชฟ พงศธร",
+    price: 3500,
+    date: "15 มิ.ย. 2026 | 09:00 - 16:00",
+    seats: 3,
+    totalSeats: 12,
+    image: "https://media.base44.com/images/public/6a16f2669d1f1a6f216f87e2/99eba7b74_generated_a0ce29b4.png",
+  },
+  {
+    id: 2,
+    title: "เวิร์กชอปโดนัทเคลือบน้ำตาล",
+    emoji: "🍩",
+    category: "donut",
+    description: "สนุกกับการปั้นและเคลือบโดนัทหลากรสชาติ พร้อมเทคนิคการทอดให้ฟูนุ่ม",
+    instructor: "เชฟ นภัสสร",
+    price: 2800,
+    date: "22 มิ.ย. 2026 | 10:00 - 15:00",
+    seats: 8,
+    totalSeats: 15,
+    image: "https://media.base44.com/images/public/6a16f2669d1f1a6f216f87e2/dd8f0ad0c_generated_3aac60cf.png",
+  },
+  {
+    id: 3,
+    title: "ขนมปังซาวร์โดว์เบื้องต้น",
+    emoji: "🍞",
+    category: "bread",
+    description: "เริ่มต้นทำขนมปังซาวร์โดว์ตั้งแต่การเลี้ยงหัวเชื้อจนถึงการอบให้ได้เปลือกกรอบ",
+    instructor: "เชฟ ธนวัฒน์",
+    price: 2500,
+    date: "29 มิ.ย. 2026 | 09:00 - 17:00",
+    seats: 0,
+    totalSeats: 10,
+    image: "https://media.base44.com/images/public/6a16f2669d1f1a6f216f87e2/1893a1cf2_generated_93d605a6.png",
+  },
+  {
+    id: 4,
+    title: "ห้องปฏิบัติการมาการอง",
+    emoji: "🎂",
+    category: "cake",
+    description: "ฝึกทำมาการองฝรั่งเศสให้ได้ผิวเรียบ เท้าสวย พร้อมไส้ครีมหลากรส",
+    instructor: "เชฟ ปาริชาต",
+    price: 4200,
+    date: "6 ก.ค. 2026 | 10:00 - 16:00",
+    seats: 5,
+    totalSeats: 10,
+    image: "https://media.base44.com/images/public/6a16f2669d1f1a6f216f87e2/83d81ab4b_generated_bdb8eebe.png",
+  },
+];
 
 export default function Home() {
-  const navigate = useNavigate();
-  const { isAuthenticated, user, logout } = useAuth();
-  const [workshops, setWorkshops] = useState([]);
-  const [selectedWorkshop, setSelectedWorkshop] = useState(null);
-  const [bookingOpen, setBookingOpen] = useState(false);
+  const [workshops, setWorkshops] = useState(initialWorkshops);
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [selected, setSelected] = useState(null);
 
-  useEffect(() => {
-    fetchWorkshops().then(setWorkshops);
-  }, []);
+  const filtered = activeCategory === "all" ? workshops : workshops.filter((w) => w.category === activeCategory);
 
-  const previewClasses = useMemo(() => workshops.slice(0, 2), [workshops]);
-
-  const handleBook = (workshop) => {
-    if (!isAuthenticated) {
-      navigate("/login?next=/booking");
-      return;
-    }
-
-    setSelectedWorkshop(workshop);
-    setBookingOpen(true);
+  const handleConfirm = (id) => {
+    setWorkshops((prev) =>
+      prev.map((w) => (w.id === id && w.seats > 0 ? { ...w, seats: w.seats - 1 } : w))
+    );
   };
 
   return (
-    <main className="min-h-screen bg-amber-50 px-6 pb-12 pt-6">
-      <div className="mx-auto max-w-5xl">
-        <header className="mb-6 flex items-center justify-between">
-          <p className="text-sm font-semibold text-amber-900">แป้งละออง · Pang-La-Ong</p>
-          <div className="flex items-center gap-2">
-            {isAuthenticated ? (
-              <>
-                <span className="text-sm text-amber-900">สวัสดี, {user.name}</span>
-                <Button variant="outline" onClick={logout}>
-                  ออกจากระบบ
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button asChild variant="outline">
-                  <Link to="/login">เข้าสู่ระบบ</Link>
-                </Button>
-                <Button asChild className="bg-amber-700 hover:bg-amber-800">
-                  <Link to="/register">สมัครสมาชิก</Link>
-                </Button>
-              </>
-            )}
+    <div className="min-h-screen bg-background font-body">
+      <HeroSection />
+
+      <PopularClasses />
+
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div className="text-center mb-6">
+          <h2 className="font-heading text-2xl md:text-3xl font-semibold text-foreground">
+            คลาสที่เปิดรับสมัคร
+          </h2>
+          <p className="font-body text-muted-foreground mt-2">เลือกคลาสที่คุณสนใจแล้วจองที่นั่งได้เลย</p>
+        </div>
+
+        <FilterBar active={activeCategory} onChange={setActiveCategory} />
+
+        {filtered.length === 0 ? (
+          <div className="text-center py-16 text-muted-foreground font-body">
+            <p className="text-4xl mb-3">🔍</p>
+            <p>ไม่มีคลาสในหมวดหมู่นี้ในขณะนี้</p>
           </div>
-        </header>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
+            {filtered.map((w) => (
+              <WorkshopCard key={w.id} workshop={w} onBook={setSelected} />
+            ))}
+          </div>
+        )}
+      </main>
 
-        <HeroSection />
-        <PopularClasses workshops={previewClasses} onBook={handleBook} />
-
-        <BookingModal
-          workshop={selectedWorkshop}
-          open={bookingOpen}
-          onOpenChange={setBookingOpen}
-          onBooked={() => navigate("/booking")}
-        />
+      <div className="text-center pb-8">
+        <Link to="/booking">
+          <button className="font-body font-semibold text-base bg-primary text-primary-foreground hover:opacity-90 transition-opacity px-10 rounded-2xl" style={{ height: '56px' }}>
+            📋 จองคลาสเรียน
+          </button>
+        </Link>
       </div>
-    </main>
+
+      <footer className="border-t border-border py-8 text-center font-body text-sm text-muted-foreground">
+        © 2026 Artisan Bakery Workshops — สงวนลิขสิทธิ์ทุกประการ
+      </footer>
+
+      <BookingModal
+        workshop={selected}
+        open={!!selected}
+        onClose={() => setSelected(null)}
+        onConfirm={handleConfirm}
+      />
+    </div>
   );
 }
