@@ -1,4 +1,44 @@
-import { useState } from "react";
+/**
+ * @typedef {{
+ *   id: number;
+ *   title: string;
+ *   chef: string;
+ *   level: string;
+ *   price: number;
+ *   bookedSeats: number;
+ *   totalSeats: number;
+ *   seatsLeft: number;
+ *   category: string;
+ *   emoji: string;
+ *   tag: string | null;
+ *   tagColor: string | null;
+ *   rank: string;
+ *   image: string;
+ *   description: string;
+ *   dateText: string;
+ *   slots: string[];
+ *   isFull: boolean;
+ * }} Workshop
+ *
+ * @typedef {{
+ *   workshop?: string;
+ *   slot?: string;
+ *   name?: string;
+ *   phone?: string;
+ * }} BookingErrors
+ *
+ * @typedef {{
+ *   bookingId: string;
+ *   status: string;
+ *   workshopId?: number;
+ *   workshopName?: string;
+ *   slot?: string;
+ *   name?: string;
+ *   phone?: string;
+ * }} BookingResult
+ */
+
+import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, CalendarDays, User, Phone, CheckCircle2 } from "lucide-react";
@@ -6,52 +46,49 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-
-const workshops = [
-  {
-    id: 1,
-    title: "โครยซองต์ มาสเตอร์คลาส",
-    emoji: "🥐",
-    instructor: "เชฟ พงศธร",
-    price: 3500,
-    slots: ["15 มิ.ย. 2026 | 09:00 - 16:00", "29 มิ.ย. 2026 | 09:00 - 16:00"],
-  },
-  {
-    id: 2,
-    title: "เวิร์กชอปโดนัทเคลือบน้ำตาล",
-    emoji: "🍩",
-    instructor: "เชฟ นภัสสร",
-    price: 2800,
-    slots: ["22 มิ.ย. 2026 | 10:00 - 15:00", "13 ก.ค. 2026 | 10:00 - 15:00"],
-  },
-  {
-    id: 3,
-    title: "ขนมปังซาวร์โดว์เบื้องต้น",
-    emoji: "🍞",
-    instructor: "เชฟ ธนวัฒน์",
-    price: 2500,
-    slots: ["6 ก.ค. 2026 | 09:00 - 17:00", "20 ก.ค. 2026 | 09:00 - 17:00"],
-  },
-  {
-    id: 4,
-    title: "ห้องปฏิบัติการมาการอง",
-    emoji: "🎂",
-    instructor: "เชฟ ปาริชาต",
-    price: 4200,
-    slots: ["6 ก.ค. 2026 | 10:00 - 16:00", "27 ก.ค. 2026 | 10:00 - 16:00"],
-  },
-];
+import { createBooking, fetchWorkshops } from "@/api/apiClient";
 
 export default function Booking() {
   const [searchParams] = useSearchParams();
   const queryId = searchParams.get("workshopId");
-  const [selectedWorkshop, setSelectedWorkshop] = useState(queryId ? parseInt(queryId, 10) : null);
+  const [workshops, setWorkshops] = useState(/** @type {Workshop[]} */ ([]));
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedWorkshop, setSelectedWorkshop] = useState(/** @type {number | null} */ (queryId ? parseInt(queryId, 10) : null));
   const [selectedSlot, setSelectedSlot] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [confirmed, setConfirmed] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [bookingResult, setBookingResult] = useState(/** @type {BookingResult | null} */ (null));
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(/** @type {string | null} */ (null));
+  const [errors, setErrors] = useState(/** @type {BookingErrors} */ ({}));
 
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+
+    fetchWorkshops()
+      .then((data) => {
+        const available = data.filter((w) => !w.isFull);
+        setWorkshops(available);
+
+        if (queryId) {
+          const requestedId = parseInt(queryId, 10);
+          const exists = available.some((w) => w.id === requestedId);
+          setSelectedWorkshop(exists ? requestedId : null);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        setError(err.message || "ไม่สามารถโหลดข้อมูลคลาสได้");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [queryId]);
+
+  /** @type {Workshop | undefined} */
   const workshop = workshops.find((w) => w.id === selectedWorkshop);
 
   const validate = () => {
@@ -64,12 +101,41 @@ export default function Booking() {
     return e;
   };
 
-  const handleSubmit = (e) => {
+  /** @param {import("react").FormEvent<HTMLFormElement>} e */
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const e2 = validate();
-    if (Object.keys(e2).length > 0) { setErrors(e2); return; }
+    if (Object.keys(e2).length > 0) {
+      setErrors(e2);
+      return;
+    }
+
+    if (!workshop) {
+      setErrors({ workshop: "ไม่พบคลาสที่เลือก" });
+      return;
+    }
+
     setErrors({});
-    setConfirmed(true);
+    setSubmitError(null);
+    setIsSubmitting(true);
+
+    try {
+      const result = await createBooking({
+        workshopId: workshop.id,
+        workshopName: workshop.title,
+        slot: selectedSlot,
+        name,
+        phone,
+      });
+      setBookingResult(result);
+      setConfirmed(true);
+    } catch (error) {
+      console.error(error);
+      const message = error instanceof Error ? error.message : "ไม่สามารถส่งคำขอจองได้";
+      setSubmitError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -98,6 +164,7 @@ export default function Booking() {
               <CheckCircle2 className="h-16 w-16 text-accent" strokeWidth={1.5} />
               <h2 className="font-heading text-3xl font-semibold text-foreground">การจองสำเร็จ! 🎉</h2>
               <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-sm text-left space-y-2 text-sm font-body text-muted-foreground">
+                <p><span className="text-foreground font-medium">รหัสการจอง:</span> {bookingResult?.bookingId}</p>
                 <p><span className="text-foreground font-medium">คลาส:</span> {workshop?.emoji} {workshop?.title}</p>
                 <p><span className="text-foreground font-medium">วันเวลา:</span> {selectedSlot}</p>
                 <p><span className="text-foreground font-medium">ชื่อ:</span> {name}</p>
@@ -123,25 +190,41 @@ export default function Booking() {
                     <span className="h-7 w-7 rounded-full bg-primary text-primary-foreground text-sm flex items-center justify-center font-body font-semibold">1</span>
                     เลือกคลาสเรียน
                   </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {workshops.map((w) => (
-                      <button
-                        key={w.id}
-                        type="button"
-                        onClick={() => { setSelectedWorkshop(w.id); setSelectedSlot(""); setErrors((prev) => ({ ...prev, workshop: undefined })); }}
-                        className={cn(
-                          "text-left p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer",
-                          selectedWorkshop === w.id
-                            ? "border-primary bg-primary/5 shadow-sm"
-                            : "border-border bg-card hover:border-primary/40"
-                        )}
-                      >
-                        <span className="text-2xl">{w.emoji}</span>
-                        <p className="font-body font-semibold text-foreground text-sm mt-1">{w.title}</p>
-                        <p className="font-body text-xs text-muted-foreground mt-0.5">{w.instructor} · ฿{w.price.toLocaleString()}</p>
-                      </button>
-                    ))}
-                  </div>
+
+                  {loading ? (
+                    <div className="rounded-3xl border border-amber-200 bg-white p-6 text-center text-amber-900 shadow-sm">
+                      กำลังโหลดคลาสที่ว่างอยู่...
+                    </div>
+                  ) : error ? (
+                    <div className="rounded-3xl border border-rose-200 bg-rose-50 p-6 text-center text-rose-900 shadow-sm">
+                      ไม่สามารถโหลดคลาสได้: {error}
+                    </div>
+                  ) : workshops.length === 0 ? (
+                    <div className="rounded-3xl border border-amber-200 bg-white p-6 text-center text-amber-900 shadow-sm">
+                      ขณะนี้ไม่มีคลาสที่ว่างให้จอง
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {workshops.map((w) => (
+                        <button
+                          key={w.id}
+                          type="button"
+                          onClick={() => { setSelectedWorkshop(w.id); setSelectedSlot(""); setErrors((prev) => ({ ...prev, workshop: undefined })); }}
+                          className={cn(
+                            "text-left p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer",
+                            selectedWorkshop === w.id
+                              ? "border-primary bg-primary/5 shadow-sm"
+                              : "border-border bg-card hover:border-primary/40"
+                          )}
+                        >
+                          <span className="text-2xl">{w.emoji}</span>
+                          <p className="font-body font-semibold text-foreground text-sm mt-1">{w.title}</p>
+                          <p className="font-body text-xs text-muted-foreground mt-0.5">{w.chef} · ฿{w.price.toLocaleString()}</p>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
                   {errors.workshop && <p className="text-destructive text-sm mt-2 font-body">{errors.workshop}</p>}
                 </section>
 
@@ -189,7 +272,7 @@ export default function Booking() {
                       </Label>
                       <Input
                         value={name}
-                        onChange={(e) => { setName(e.target.value); setErrors((prev) => ({ ...prev, name: undefined })); }}
+                        onChange={(/** @type {import("react").ChangeEvent<HTMLInputElement>} */ e) => { setName(e.target.value); setErrors((prev) => ({ ...prev, name: undefined })); }}
                         className="h-13 text-base font-body"
                         placeholder="กรุณากรอกชื่อ-นามสกุล"
                         style={{ height: "52px", fontSize: "16px" }}
@@ -202,7 +285,7 @@ export default function Booking() {
                       </Label>
                       <Input
                         value={phone}
-                        onChange={(e) => { setPhone(e.target.value); setErrors((prev) => ({ ...prev, phone: undefined })); }}
+                        onChange={(/** @type {import("react").ChangeEvent<HTMLInputElement>} */ e) => { setPhone(e.target.value); setErrors((prev) => ({ ...prev, phone: undefined })); }}
                         className="h-13 text-base font-body"
                         placeholder="0xx-xxx-xxxx"
                         type="tel"
@@ -227,12 +310,19 @@ export default function Booking() {
                   </motion.div>
                 )}
 
+                {submitError && (
+                  <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">
+                    {submitError}
+                  </div>
+                )}
+
                 <Button
                   type="submit"
-                  className="w-full font-body font-semibold text-base bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+                  disabled={isSubmitting || loading || !!error}
+                  className="w-full font-body font-semibold text-base bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{ height: "56px" }}
                 >
-                  ✅ ยืนยันการจอง
+                  {isSubmitting ? "กำลังส่งคำขอจอง..." : "✅ ยืนยันการจอง"}
                 </Button>
               </form>
             </motion.div>

@@ -2,8 +2,27 @@ import { createContext, useCallback, useContext, useMemo, useState } from "react
 
 import { DEMO_USER } from "@/lib/app-params";
 
+/**
+ * @typedef {{ name: string; email: string }} AuthUser
+ * @typedef {{
+ *   user: AuthUser | null;
+ *   isAuthenticated: boolean;
+ *   isLoadingAuth: boolean;
+ *   isLoadingPublicSettings: boolean;
+ *   authError: any;
+ *   authChecked: boolean;
+ *   appPublicSettings: any;
+ *   login: (payload: { email: string; password: string }) => { ok: boolean; message?: string };
+ *   register: (payload: { name: string; email: string }) => { ok: boolean };
+ *   logout: () => void;
+ *   navigateToLogin: () => void;
+ *   checkUserAuth: () => AuthUser | null;
+ *   checkAppState: () => void;
+ * }} AuthContextValue
+ */
+
 const AUTH_STORAGE_KEY = "panglaong-user";
-const AuthContext = createContext(null);
+const AuthContext = createContext(/** @type {AuthContextValue | null} */ (null));
 
 function readUserFromStorage() {
   try {
