@@ -341,7 +341,7 @@ export default function Booking() {
                   className="w-full font-body font-semibold text-base bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
                   style={{ height: "56px" }}
                 >
-                  ✅ ยืนยันการจอง
+                  ยืนยันการจอง
                 </Button>
               </form>
             </motion.div>
