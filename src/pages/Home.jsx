@@ -1,3 +1,25 @@
+/**
+ * @typedef {{
+ *   id: number;
+ *   title: string;
+ *   chef: string;
+ *   level: string;
+ *   price: number;
+ *   bookedSeats: number;
+ *   totalSeats: number;
+ *   seatsLeft: number;
+ *   category: string;
+ *   emoji: string;
+ *   tag: string | null;
+ *   tagColor: string | null;
+ *   rank: string;
+ *   image: string;
+ *   description: string;
+ *   dateText: string;
+ *   isFull: boolean;
+ * }} Workshop
+ */
+
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -13,16 +35,32 @@ import { User, LogOut } from "lucide-react";
 export default function Home() {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
-  const [workshops, setWorkshops] = useState([]);
-  const [selectedWorkshop, setSelectedWorkshop] = useState(null);
+  const [workshops, setWorkshops] = useState(/** @type {Workshop[]} */ ([]));
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedWorkshop, setSelectedWorkshop] = useState(/** @type {Workshop | null} */ (null));
   const [bookingOpen, setBookingOpen] = useState(false);
 
   useEffect(() => {
-    fetchWorkshops().then(setWorkshops);
+    setLoading(true);
+    setError(null);
+
+    fetchWorkshops()
+      .then((data) => {
+        setWorkshops(data);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError(err.message || "เกิดข้อผิดพลาดในการโหลดข้อมูล");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   const previewClasses = useMemo(() => workshops.slice(0, 3), [workshops]);
 
+  /** @param {Workshop} workshop */
   const handleBook = (workshop) => {
     if (!isAuthenticated) {
       navigate("/login?next=/booking");
@@ -50,7 +88,7 @@ export default function Home() {
                     <User className="h-4 w-4" />
                   </div>
                   <span className="text-xs font-bold text-neutral-700">
-                    สวัสดี, <span className="text-[#c25e25] font-extrabold">{user.name}</span>
+                    สวัสดี, <span className="text-[#c25e25] font-extrabold">{user?.name || "ผู้ใช้"}</span>
                   </span>
                 </div>
 
@@ -79,8 +117,21 @@ export default function Home() {
         </header>
 
         <HeroSection />
-        <PopularClasses workshops={previewClasses} onBook={handleBook} />
-        <AllClasses workshops={workshops} onBook={handleBook} />
+
+        {loading ? (
+          <div className="rounded-3xl border border-amber-200 bg-white p-10 text-center text-amber-900 shadow-sm">
+            กำลังโหลดคลาส...
+          </div>
+        ) : error ? (
+          <div className="rounded-3xl border border-rose-200 bg-rose-50 p-10 text-center text-rose-900 shadow-sm">
+            ไม่สามารถโหลดคลาสได้: {error}
+          </div>
+        ) : (
+          <>
+            <PopularClasses workshops={previewClasses} onBook={handleBook} />
+            <AllClasses workshops={workshops} onBook={handleBook} />
+          </>
+        )}
 
         <div className="mt-16 flex justify-center">
           <Button

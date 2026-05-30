@@ -1,8 +1,38 @@
+/**
+ * @typedef {{
+ *   id: number;
+ *   title: string;
+ *   chef: string;
+ *   level: string;
+ *   price: number;
+ *   bookedSeats: number;
+ *   totalSeats: number;
+ *   seatsLeft: number;
+ *   category: string;
+ *   emoji: string;
+ *   tag: string | null;
+ *   tagColor: string | null;
+ *   rank: string;
+ *   image: string;
+ *   description: string;
+ *   dateText: string;
+ *   slots?: string[];
+ *   isFull: boolean;
+ * }} Workshop
+ *
+ * @typedef {{
+ *   workshops: Workshop[];
+ *   onBook: (workshop: Workshop) => void;
+ * }} PopularClassesProps
+ */
+
 import { Flame, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+/** @param {PopularClassesProps} props */
 export default function PopularClasses({ workshops, onBook }) {
   // Styles for tags
+  /** @param {string | null | undefined} color */
   const getTagClasses = (color) => {
     switch (color) {
       case "red":
@@ -30,6 +60,7 @@ export default function PopularClasses({ workshops, onBook }) {
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {workshops.map((workshop) => {
+          const isFull = workshop.isFull || workshop.seatsLeft === 0;
           const percentage = Math.round((workshop.bookedSeats / workshop.totalSeats) * 100);
 
           return (
@@ -98,12 +129,21 @@ export default function PopularClasses({ workshops, onBook }) {
                     ฿{workshop.price.toLocaleString()}
                   </span>
 
-                  <Button
-                    onClick={() => onBook(workshop)}
-                    className="rounded-xl bg-[#c25e25] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-colors duration-200 hover:bg-[#a04a1a] hover:text-white"
-                  >
-                    จองเลย
-                  </Button>
+                  {isFull ? (
+                    <Button
+                      disabled
+                      className="rounded-xl bg-neutral-100 px-6 py-2.5 text-sm font-bold text-neutral-400 border border-neutral-200 cursor-not-allowed shadow-none"
+                    >
+                      เต็มแล้ว
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => onBook(workshop)}
+                      className="rounded-xl bg-[#c25e25] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-colors duration-200 hover:bg-[#a04a1a] hover:text-white"
+                    >
+                      จองเลย
+                    </Button>
+                  )}
                 </div>
               </div>
             </article>
