@@ -30,7 +30,9 @@ const BASE_QUERY = `
     w.description,
     COALESCE(SUM(b.seat_count), 0)                     AS bookedSeats,
     w.max_capacity - COALESCE(SUM(b.seat_count), 0)   AS seatsLeft,
-    (w.max_capacity <= COALESCE(SUM(b.seat_count), 0)) AS isFull
+    (w.max_capacity <= COALESCE(SUM(b.seat_count), 0)) AS isFull,
+    (SELECT slot_text FROM workshop_slots
+     WHERE workshop_id = w.id ORDER BY id ASC LIMIT 1) AS dateText
   FROM workshops w
   LEFT JOIN bookings b
     ON b.workshop_id = w.id AND b.status = 'confirmed'

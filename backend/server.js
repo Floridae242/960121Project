@@ -22,9 +22,12 @@ const errorHandler = require("./middleware/errorHandler");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// อนุญาต cross-origin request จาก Vite dev server เท่านั้น
-// credentials: true จำเป็นสำหรับการส่ง Authorization header
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+// อนุญาต cross-origin request จาก Vite dev server ทุก port (5173-5179)
+// Vite อาจเปลี่ยน port อัตโนมัติถ้า port ถูกใช้อยู่แล้ว
+app.use(cors({
+  origin: /^http:\/\/localhost:(517[0-9])$/,
+  credentials: true,
+}));
 
 // แปลง request body จาก JSON string ให้เป็น JavaScript object อัตโนมัติ
 app.use(express.json());
