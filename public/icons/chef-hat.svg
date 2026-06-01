@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Hat band at bottom -->
+  <rect x="22" y="68" width="56" height="14" rx="3"/>
+  <!-- Horizontal lines on band -->
+  <line x1="22" y1="75" x2="78" y2="75" stroke-width="2"/>
+  <!-- Left puff -->
+  <path d="M26 68 C16 65, 12 55, 18 46 C22 40, 30 38, 36 42"/>
+  <!-- Center puff (tallest) -->
+  <path d="M36 68 C30 65, 26 56, 30 46 C34 36, 44 30, 50 30 C56 30, 66 36, 70 46 C74 56, 70 65, 64 68"/>
+  <!-- Right puff -->
+  <path d="M64 68 C70 64, 78 56, 74 46 C70 40, 62 38, 56 42"/>
+  <!-- Top highlight curve -->
+  <path d="M38 34 C42 28, 58 28, 62 34" stroke-width="2.5"/>
+</svg>
