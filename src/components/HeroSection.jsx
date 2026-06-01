@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { motion } from "framer-motion";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 // โหลด 3D scene แบบ lazy — แยก three.js ออกจาก initial bundle
 // เพื่อไม่ให้ block first paint ของ hero (ดู Suspense fallback ด้านล่าง)
@@ -18,6 +19,8 @@ const BADGES = [
 ];
 
 export default function HeroSection() {
+  const isStacked = useMediaQuery("(max-width: 900px)");
+
   return (
     <section style={{
       minHeight: "100vh",
@@ -53,15 +56,23 @@ export default function HeroSection() {
 
       <div style={{
         maxWidth: "1280px", width: "100%", margin: "0 auto",
-        padding: "80px clamp(24px,5vw,64px)",
-        display: "flex", alignItems: "center", gap: "0",
+        padding: isStacked ? "48px clamp(24px,5vw,64px)" : "80px clamp(24px,5vw,64px)",
+        display: "flex",
+        flexDirection: isStacked ? "column" : "row",
+        alignItems: "center", gap: isStacked ? "32px" : "0",
         position: "relative", zIndex: 2,
       }}>
         {/* LEFT — text */}
-        <div style={{ flex: "0 0 52%", paddingRight: "48px" }}>
+        <div style={{
+          flex: isStacked ? "1 1 auto" : "0 0 52%",
+          width: isStacked ? "100%" : "auto",
+          paddingRight: isStacked ? 0 : "48px",
+          textAlign: isStacked ? "center" : "left",
+        }}>
           {/* Eyebrow */}
           <motion.div {...fadeUp(0)} style={{
             display: "flex", alignItems: "center", gap: "14px", marginBottom: "28px",
+            justifyContent: isStacked ? "center" : "flex-start",
           }}>
             <div style={{ width: "40px", height: "1.5px", background: "var(--wm-red)" }} />
             <span style={{
@@ -104,6 +115,8 @@ export default function HeroSection() {
             fontSize: "clamp(15px,1.3vw,17px)",
             color: "var(--wm-muted)", lineHeight: 1.75,
             maxWidth: "440px", marginBottom: "44px",
+            marginLeft: isStacked ? "auto" : 0,
+            marginRight: isStacked ? "auto" : 0,
             fontWeight: 400,
           }}>
             เรียนรู้จากเชฟมืออาชีพในบรรยากาศอบอุ่น
@@ -112,7 +125,7 @@ export default function HeroSection() {
           </motion.p>
 
           {/* Two buttons */}
-          <motion.div {...fadeUp(0.3)} style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginBottom: "48px" }}>
+          <motion.div {...fadeUp(0.3)} style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginBottom: "48px", justifyContent: isStacked ? "center" : "flex-start" }}>
             <button
               onClick={() => document.getElementById("classes-section")?.scrollIntoView({ behavior: "smooth" })}
               style={{
@@ -171,7 +184,7 @@ export default function HeroSection() {
           </motion.div>
 
           {/* 3 Social proof badges */}
-          <motion.div {...fadeUp(0.45)} style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+          <motion.div {...fadeUp(0.45)} style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: isStacked ? "center" : "flex-start" }}>
             {BADGES.map(({ icon, value, label }) => (
               <div key={label} style={{
                 display: "flex", alignItems: "center", gap: "10px",
@@ -209,7 +222,12 @@ export default function HeroSection() {
         </div>
 
         {/* RIGHT — 3D bakery room */}
-        <div style={{ flex: 1, height: "560px", position: "relative" }}>
+        <div style={{
+          flex: isStacked ? "0 0 auto" : 1,
+          width: isStacked ? "100%" : "auto",
+          height: isStacked ? "360px" : "560px",
+          position: "relative",
+        }}>
           {/* Warm background blob */}
           <div style={{
             position: "absolute", inset: "-40px",

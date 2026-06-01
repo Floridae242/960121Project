@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const FEATURES = [
   {
@@ -174,6 +175,9 @@ function FeatureCard({ icon, eyebrow, title, body, delay }) {
 export default function FeaturesSection() {
   const headerRef = useRef(null);
   const [headerVisible, setHeaderVisible] = useState(false);
+  const isTablet = useMediaQuery("(max-width: 1024px)");
+  const isMobile = useMediaQuery("(max-width: 640px)");
+  const featureCols = isMobile ? 1 : isTablet ? 2 : 3;
 
   useEffect(() => {
     const el = headerRef.current;
@@ -248,10 +252,10 @@ export default function FeaturesSection() {
           </p>
         </div>
 
-        {/* 3-column feature grid */}
+        {/* responsive feature grid: 3 / 2 / 1 columns */}
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
+          gridTemplateColumns: `repeat(${featureCols}, 1fr)`,
           gap: "2px",
         }}>
           {FEATURES.map((feature, idx) => (

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { fetchWorkshops } from "@/api/apiClient";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import WorkshopCardWhite from "./WorkshopCardWhite";
 import BookingModal from "./BookingModal";
 
@@ -23,6 +24,9 @@ export default function WorkshopsSection() {
   const searchQuery = useDebounce(searchInput, 300);
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
   const [bookingOpen, setBookingOpen] = useState(false);
+  const isTablet = useMediaQuery("(max-width: 1024px)");
+  const isMobile = useMediaQuery("(max-width: 640px)");
+  const cardCols = isMobile ? 1 : isTablet ? 2 : 3;
 
   useEffect(() => {
     fetchWorkshops()
@@ -57,7 +61,7 @@ export default function WorkshopsSection() {
       id="classes-section"
       style={{
         background: "#fff",
-        padding: "100px 48px",
+        padding: "clamp(64px,10vw,100px) clamp(20px,5vw,48px)",
         borderTop: "1px solid var(--wm-border)",
       }}
     >
@@ -161,7 +165,7 @@ export default function WorkshopsSection() {
         ) : (
           <div style={{
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
+            gridTemplateColumns: `repeat(${cardCols}, 1fr)`,
             gap: "2px",
           }}>
             {filtered.map((w) => (

@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export default function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -48,8 +50,8 @@ export default function NavBar() {
         <span style={{ color: "var(--wm-red)", fontStyle: "normal", fontSize: "28px", lineHeight: 1 }}>.</span>
       </button>
 
-      {/* Center nav links */}
-      <div style={{ display: "flex", gap: "40px" }}>
+      {/* Center nav links — ซ่อนบนมือถือ (หน้าเดียว scroll ได้, ใช้โลโก้ + CTA แทน) */}
+      <div style={{ display: isMobile ? "none" : "flex", gap: "40px" }}>
         {[
           { label: "Home", action: () => window.scrollTo({ top: 0, behavior: "smooth" }) },
           { label: "Classes", action: () => scrollTo("classes-section") },
