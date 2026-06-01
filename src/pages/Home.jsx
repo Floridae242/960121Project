@@ -29,8 +29,8 @@ export default function Home() {
     <div style={{ background: "var(--wm-bg)" }}>
       <NavBar />
       <HeroSection />
-      <FeaturesSection />
       <WorkshopsSection />
+      <FeaturesSection />
       <FinalCTASection />
       <ContactSection />
       <Footer />

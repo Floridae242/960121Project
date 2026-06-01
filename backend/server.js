@@ -14,6 +14,7 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 
@@ -27,13 +28,17 @@ const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const CLIENT_BUILD_PATH = path.resolve(__dirname, "../dist");
 
-// อนุญาต cross-origin request จาก Vite dev server ทุก port (5173-5179)
-// Vite อาจเปลี่ยน port อัตโนมัติถ้า port ถูกใช้อยู่แล้ว
-app.use(cors({
+const corsOptions = process.env.NODE_ENV === "production" ? {
+  origin: true,
+  credentials: true,
+} : {
   origin: /^http:\/\/localhost:(517[0-9])$/,
   credentials: true,
-}));
+};
+
+app.use(cors(corsOptions));
 
 // แปลง request body จาก JSON string ให้เป็น JavaScript object อัตโนมัติ
 app.use(express.json({ limit: '10kb' }));
@@ -42,6 +47,15 @@ app.use(express.json({ limit: '10kb' }));
 app.use("/api/auth", authRoutes);
 app.use("/api/workshops", workshopRoutes);
 app.use("/api/bookings", bookingRoutes);
+
+// Serve built frontend in production from root/dist
+app.use(express.static(CLIENT_BUILD_PATH));
+app.get("*", (req, res, next) => {
+  if (req.originalUrl.startsWith("/api")) {
+    return next();
+  }
+  res.sendFile(path.join(CLIENT_BUILD_PATH, "index.html"));
+});
 
 // จัดการ request ที่ไม่ตรงกับ route ใดเลย — ส่ง 404 กลับ
 app.use((req, res) => {
