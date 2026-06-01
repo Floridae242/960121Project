@@ -8,6 +8,12 @@
  */
 
 require("dotenv").config();
+
+if (!process.env.JWT_SECRET) {
+  console.error("FATAL: JWT_SECRET is missing from .env");
+  process.exit(1);
+}
+
 const express = require("express");
 const cors = require("cors");
 
@@ -30,7 +36,7 @@ app.use(cors({
 }));
 
 // แปลง request body จาก JSON string ให้เป็น JavaScript object อัตโนมัติ
-app.use(express.json());
+app.use(express.json({ limit: '10kb' }));
 
 // เชื่อมต่อ route groups เข้ากับ path prefix ที่เหมาะสม
 app.use("/api/auth", authRoutes);
