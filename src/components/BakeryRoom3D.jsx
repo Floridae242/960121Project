@@ -45,14 +45,15 @@ function RoomModel() {
   }, [gltfScene, textures]);
 
   // โมเดลอยู่นิ่ง ไม่มีการหมุน/ขยับอัตโนมัติ — การหมุนทั้งหมดมาจากผู้ใช้ลาก (OrbitControls)
-  return <primitive object={scene} scale={1.6} />;
+  // จัดให้อยู่กึ่งกลางเฟรม
+  return <primitive object={scene} scale={1.6} position={[0, 0, 0]} />;
 }
 
 export default function BakeryRoom3D({ className = "" }) {
   return (
     <div className={`w-full h-full ${className}`}>
       <Canvas
-        camera={{ position: [4, 3, 5], fov: 38 }}
+        camera={{ position: [-6, 4.5, 8], fov: 38 }}
         gl={{ antialias: true, alpha: true }}
         style={{ background: "transparent" }}
         shadows
