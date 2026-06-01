@@ -1,6 +1,12 @@
-import { useState } from "react";
+/**
+ * BookingModal.jsx — Modal แสดงรายละเอียดคลาสก่อนไปหน้าจอง
+ *
+ * Modal นี้ทำหน้าที่ preview workshop สั้น ๆ แล้ว navigate ไปหน้า /booking
+ * ไม่เรียก createBooking โดยตรง เพราะ API ต้องการ slotId และ seats
+ * ซึ่งผู้ใช้ต้องเลือกใน /booking page
+ */
 
-import { createBooking } from "@/api/apiClient";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,28 +17,27 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export default function BookingModal({ workshop, open, onOpenChange, onBooked }) {
-  const [isSaving, setIsSaving] = useState(false);
+export default function BookingModal({ workshop, open, onOpenChange }) {
+  const navigate = useNavigate();
 
-  const handleConfirm = async () => {
-    if (!workshop) {
-      return;
-    }
-
-    setIsSaving(true);
-    const booking = await createBooking({ workshopId: workshop.id, workshopName: workshop.title });
-    onBooked(booking);
-    setIsSaving(false);
+  // นำผู้ใช้ไปหน้า /booking พร้อม pre-select workshop
+  const handleGoToBooking = () => {
     onOpenChange(false);
+    navigate(`/booking?workshopId=${workshop?.id}`);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>ยืนยันการจองคลาส</DialogTitle>
+          <DialogTitle>จองคลาสเรียน</DialogTitle>
           <DialogDescription>
-            คุณกำลังจองคลาส <span className="font-semibold">{workshop?.title}</span>
+            คุณกำลังจะจองคลาส{" "}
+            <span className="font-semibold text-foreground">{workshop?.title}</span>
+            <br />
+            <span className="text-xs mt-1 block">
+              สอนโดย {workshop?.chef} · ฿{workshop?.price?.toLocaleString()} / ที่นั่ง
+            </span>
           </DialogDescription>
         </DialogHeader>
 
@@ -40,8 +45,11 @@ export default function BookingModal({ workshop, open, onOpenChange, onBooked })
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             ยกเลิก
           </Button>
-          <Button className="bg-amber-700 hover:bg-amber-800" onClick={handleConfirm} disabled={isSaving}>
-            {isSaving ? "กำลังจอง..." : "ยืนยัน"}
+          <Button
+            onClick={handleGoToBooking}
+            style={{ backgroundColor: '#C9943A', color: '#0A0806' }}
+          >
+            เลือกวันและที่นั่ง →
           </Button>
         </DialogFooter>
       </DialogContent>
