@@ -2,7 +2,7 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { ChevronRight, MoreHorizontal } from "lucide-react"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils"
 
 const Breadcrumb = React.forwardRef(
   ({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />
@@ -32,10 +32,10 @@ const BreadcrumbLink = React.forwardRef(({ asChild, className, ...props }, ref) 
   const Comp = asChild ? Slot : "a"
 
   return (
-    (<Comp
+    <Comp
       ref={ref}
       className={cn("transition-colors hover:text-foreground", className)}
-      {...props} />)
+      {...props} />
   );
 })
 BreadcrumbLink.displayName = "BreadcrumbLink"

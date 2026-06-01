@@ -1,29 +1,27 @@
-import { cn } from "@/lib/utils";
+import { CLASS_CATEGORIES } from "@/lib/app-params";
 
-const categories = [
-  { id: "all", label: "ทั้งหมด", emoji: "🍽️" },
-  { id: "french", label: "เบเกอรี่ฝรั่งเศส", emoji: "🥐" },
-  { id: "bread", label: "ขนมปังอบ", emoji: "🍞" },
-  { id: "cake", label: "เค้กและขนมหวาน", emoji: "🎂" },
-  { id: "donut", label: "โดนัทและฟริตเตอร์", emoji: "🍩" },
-];
-
-export default function FilterBar({ active, onChange }) {
+export default function FilterBar({ category, setCategory }) {
   return (
-    <div className="flex flex-wrap gap-2 mb-8">
-      {categories.map((cat) => (
+    <div className="flex flex-wrap gap-2">
+      <button
+        type="button"
+        className={`rounded-full px-4 py-1.5 text-sm font-medium ${
+          category === "ทั้งหมด" ? "bg-amber-800 text-white" : "bg-amber-100 text-amber-900"
+        }`}
+        onClick={() => setCategory("ทั้งหมด")}
+      >
+        ทั้งหมด
+      </button>
+      {CLASS_CATEGORIES.map((item) => (
         <button
-          key={cat.id}
-          onClick={() => onChange(cat.id)}
-          className={cn(
-            "flex items-center gap-2 px-4 py-2 rounded-full border font-body text-sm font-medium transition-all duration-300",
-            active === cat.id
-              ? "bg-primary text-primary-foreground border-primary shadow-sm"
-              : "bg-card text-foreground border-border hover:border-primary/50 hover:bg-primary/5"
-          )}
+          key={item}
+          type="button"
+          className={`rounded-full px-4 py-1.5 text-sm font-medium ${
+            category === item ? "bg-amber-800 text-white" : "bg-amber-100 text-amber-900"
+          }`}
+          onClick={() => setCategory(item)}
         >
-          <span>{cat.emoji}</span>
-          {cat.label}
+          {item}
         </button>
       ))}
     </div>

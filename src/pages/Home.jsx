@@ -1,127 +1,156 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import HeroSection from "../components/HeroSection";
-import PopularClasses from "../components/PopularClasses";
-import WorkshopCard from "../components/WorkshopCard";
-import FilterBar from "../components/FilterBar";
-import BookingModal from "../components/BookingModal";
+/**
+ * @typedef {{
+ *   id: number;
+ *   title: string;
+ *   chef: string;
+ *   level: string;
+ *   price: number;
+ *   bookedSeats: number;
+ *   totalSeats: number;
+ *   seatsLeft: number;
+ *   category: string;
+ *   emoji: string;
+ *   tag: string | null;
+ *   tagColor: string | null;
+ *   rank: string;
+ *   image: string;
+ *   description: string;
+ *   dateText: string;
+ *   isFull: boolean;
+ * }} Workshop
+ */
 
-const initialWorkshops = [
-  {
-    id: 1,
-    title: "โครยซองต์ มาสเตอร์คลาส",
-    emoji: "🥐",
-    category: "french",
-    description: "เรียนรู้ความลับของเลเยอร์ที่สมบูรณ์แบบและการนวดเนยสไตล์ฝรั่งเศสขนานแท้",
-    instructor: "เชฟ พงศธร",
-    price: 3500,
-    date: "15 มิ.ย. 2026 | 09:00 - 16:00",
-    seats: 3,
-    totalSeats: 12,
-    image: "https://media.base44.com/images/public/6a16f2669d1f1a6f216f87e2/99eba7b74_generated_a0ce29b4.png",
-  },
-  {
-    id: 2,
-    title: "เวิร์กชอปโดนัทเคลือบน้ำตาล",
-    emoji: "🍩",
-    category: "donut",
-    description: "สนุกกับการปั้นและเคลือบโดนัทหลากรสชาติ พร้อมเทคนิคการทอดให้ฟูนุ่ม",
-    instructor: "เชฟ นภัสสร",
-    price: 2800,
-    date: "22 มิ.ย. 2026 | 10:00 - 15:00",
-    seats: 8,
-    totalSeats: 15,
-    image: "https://media.base44.com/images/public/6a16f2669d1f1a6f216f87e2/dd8f0ad0c_generated_3aac60cf.png",
-  },
-  {
-    id: 3,
-    title: "ขนมปังซาวร์โดว์เบื้องต้น",
-    emoji: "🍞",
-    category: "bread",
-    description: "เริ่มต้นทำขนมปังซาวร์โดว์ตั้งแต่การเลี้ยงหัวเชื้อจนถึงการอบให้ได้เปลือกกรอบ",
-    instructor: "เชฟ ธนวัฒน์",
-    price: 2500,
-    date: "29 มิ.ย. 2026 | 09:00 - 17:00",
-    seats: 0,
-    totalSeats: 10,
-    image: "https://media.base44.com/images/public/6a16f2669d1f1a6f216f87e2/1893a1cf2_generated_93d605a6.png",
-  },
-  {
-    id: 4,
-    title: "ห้องปฏิบัติการมาการอง",
-    emoji: "🎂",
-    category: "cake",
-    description: "ฝึกทำมาการองฝรั่งเศสให้ได้ผิวเรียบ เท้าสวย พร้อมไส้ครีมหลากรส",
-    instructor: "เชฟ ปาริชาต",
-    price: 4200,
-    date: "6 ก.ค. 2026 | 10:00 - 16:00",
-    seats: 5,
-    totalSeats: 10,
-    image: "https://media.base44.com/images/public/6a16f2669d1f1a6f216f87e2/83d81ab4b_generated_bdb8eebe.png",
-  },
-];
+import { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+import { fetchWorkshops } from "@/api/apiClient";
+import BookingModal from "@/components/BookingModal";
+import HeroSection from "@/components/HeroSection";
+import PopularClasses from "@/components/PopularClasses";
+import AllClasses from "@/components/AllClasses";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/AuthContext";
+import { User, LogOut } from "lucide-react";
 
 export default function Home() {
-  const [workshops, setWorkshops] = useState(initialWorkshops);
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [selected, setSelected] = useState(null);
+  const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuth();
+  const [workshops, setWorkshops] = useState(/** @type {Workshop[]} */ ([]));
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedWorkshop, setSelectedWorkshop] = useState(/** @type {Workshop | null} */ (null));
+  const [bookingOpen, setBookingOpen] = useState(false);
 
-  const filtered = activeCategory === "all" ? workshops : workshops.filter((w) => w.category === activeCategory);
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
 
-  const handleConfirm = (id) => {
-    setWorkshops((prev) =>
-      prev.map((w) => (w.id === id && w.seats > 0 ? { ...w, seats: w.seats - 1 } : w))
-    );
+    fetchWorkshops()
+      .then((data) => {
+        setWorkshops(data);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError(err.message || "เกิดข้อผิดพลาดในการโหลดข้อมูล");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const previewClasses = useMemo(() => workshops.slice(0, 3), [workshops]);
+
+  /** @param {Workshop} workshop */
+  const handleBook = (workshop) => {
+    if (!isAuthenticated) {
+      navigate("/login?next=/booking");
+      return;
+    }
+
+    setSelectedWorkshop(workshop);
+    setBookingOpen(true);
   };
 
   return (
-    <div className="min-h-screen bg-background font-body">
-      <HeroSection />
+    <main className="min-h-screen bg-amber-50 px-6 pb-12 pt-6">
+      <div className="mx-auto max-w-5xl">
+        <header className="mb-6 flex items-center justify-between">
+          <div className="flex items-baseline">
+            <span className="text-lg font-bold text-amber-950">แป้งละออง</span>
+            <span className="text-sm text-amber-800/60 ml-1"> · Pang-La-Ong</span>
+          </div>
+          <div className="flex items-center gap-2">
+            {isAuthenticated ? (
+              <div className="flex items-center gap-3">
+                {/* Profile Info Pill */}
+                <div className="flex items-center gap-2.5 bg-white border border-neutral-300 rounded-full px-4 py-1.5 shadow-sm">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-orange-100 text-orange-700">
+                    <User className="h-4 w-4" />
+                  </div>
+                  <span className="text-xs font-bold text-neutral-700">
+                    สวัสดี, <span className="text-[#c25e25] font-extrabold">{user?.name || "ผู้ใช้"}</span>
+                  </span>
+                </div>
 
-      <PopularClasses />
+                {/* Logout Button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={logout}
+                  className="rounded-full flex items-center gap-1.5 border-neutral-300 bg-white hover:bg-neutral-50 text-xs font-bold text-neutral-700 shadow-sm"
+                >
+                  <LogOut className="h-3.5 w-3.5 text-neutral-600" />
+                  ออกจากระบบ
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Button asChild variant="outline" className="rounded-full border-neutral-300 text-neutral-700 hover:bg-neutral-50 shadow-sm">
+                  <Link to="/login">เข้าสู่ระบบ</Link>
+                </Button>
+                <Button asChild className="rounded-full bg-amber-700 hover:bg-amber-800 text-white shadow-sm">
+                  <Link to="/register">สมัครสมาชิก</Link>
+                </Button>
+              </>
+            )}
+          </div>
+        </header>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="text-center mb-6">
-          <h2 className="font-heading text-2xl md:text-3xl font-semibold text-foreground">
-            คลาสที่เปิดรับสมัคร
-          </h2>
-          <p className="font-body text-muted-foreground mt-2">เลือกคลาสที่คุณสนใจแล้วจองที่นั่งได้เลย</p>
-        </div>
+        <HeroSection />
 
-        <FilterBar active={activeCategory} onChange={setActiveCategory} />
-
-        {filtered.length === 0 ? (
-          <div className="text-center py-16 text-muted-foreground font-body">
-            <p className="text-4xl mb-3">🔍</p>
-            <p>ไม่มีคลาสในหมวดหมู่นี้ในขณะนี้</p>
+        {loading ? (
+          <div className="rounded-3xl border border-amber-200 bg-white p-10 text-center text-amber-900 shadow-sm">
+            กำลังโหลดคลาส...
+          </div>
+        ) : error ? (
+          <div className="rounded-3xl border border-rose-200 bg-rose-50 p-10 text-center text-rose-900 shadow-sm">
+            ไม่สามารถโหลดคลาสได้: {error}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
-            {filtered.map((w) => (
-              <WorkshopCard key={w.id} workshop={w} onBook={setSelected} />
-            ))}
-          </div>
+          <>
+            <PopularClasses workshops={previewClasses} onBook={handleBook} />
+            <AllClasses workshops={workshops} onBook={handleBook} />
+          </>
         )}
-      </main>
 
-      <div className="text-center pb-8">
-        <Link to="/booking">
-          <button className="font-body font-semibold text-base bg-primary text-primary-foreground hover:opacity-90 transition-opacity px-10 rounded-2xl" style={{ height: '56px' }}>
-            📋 จองคลาสเรียน
-          </button>
-        </Link>
+        <div className="mt-16 flex justify-center">
+          <Button
+            asChild
+            className="rounded-2xl bg-[#c25e25] px-8 py-6 text-base font-extrabold text-white shadow-md transition-all duration-200 hover:bg-[#a04a1a] hover:scale-[1.02] hover:text-white"
+          >
+            <Link to="/booking" className="flex items-center gap-2">
+              จองคลาสเรียน
+            </Link>
+          </Button>
+        </div>
+
+        <BookingModal
+          workshop={selectedWorkshop}
+          open={bookingOpen}
+          onOpenChange={setBookingOpen}
+          onBooked={() => navigate(`/booking?workshopId=${selectedWorkshop?.id}`)}
+        />
       </div>
-
-      <footer className="border-t border-border py-8 text-center font-body text-sm text-muted-foreground">
-        © 2026 Artisan Bakery Workshops — สงวนลิขสิทธิ์ทุกประการ
-      </footer>
-
-      <BookingModal
-        workshop={selected}
-        open={!!selected}
-        onClose={() => setSelected(null)}
-        onConfirm={handleConfirm}
-      />
-    </div>
+    </main>
   );
 }

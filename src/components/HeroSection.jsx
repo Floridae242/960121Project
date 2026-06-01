@@ -1,41 +1,34 @@
-import { motion } from "framer-motion";
+import heroBg from "../hero-bg.png";
 
 export default function HeroSection() {
   return (
-    <section className="relative flex items-center justify-center min-h-[50vh] md:min-h-[60vh] overflow-hidden bg-foreground">
+    <section className="relative h-[380px] w-full overflow-hidden rounded-[2rem] shadow-sm md:h-[450px]">
+      {/* Background Image */}
       <img
-        src="https://media.base44.com/images/public/6a16f2669d1f1a6f216f87e2/8056de174_generated_image.png"
-        alt="artisan bakery"
-        className="absolute inset-0 h-full w-full object-cover object-center"
+        src={heroBg}
+        alt="Artisan Bakery workshops banner"
+        className="absolute inset-0 h-full w-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-foreground/60 via-foreground/40 to-background z-10" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_40%,_hsl(var(--foreground))_100%)]" />
 
-      <div className="relative z-20 text-center px-6 max-w-3xl">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.6 }}
-          className="font-body text-sm md:text-base tracking-widest uppercase text-primary-foreground/60 mb-4"
-        >
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-black/40" />
+
+      {/* Bottom vertical gradient fade to blend with bg-amber-50 */}
+      <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-amber-50 via-amber-50/40 to-transparent" />
+
+      {/* Centered Typography Content */}
+      <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center text-white">
+        <p className="text-xs font-bold uppercase tracking-[0.25em] text-white/90 md:text-sm">
           Artisan Bakery Workshops
-        </motion.p>
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25, duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
-          className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-tight"
-        >
+        </p>
+
+        <h1 className="mt-3 text-4xl font-extrabold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl">
           ศิลปะแห่งการนวดแป้ง
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45, duration: 0.6 }}
-          className="font-body text-base md:text-lg text-primary-foreground/70 mt-4 leading-relaxed"
-        >
+        </h1>
+
+        <p className="mt-4 max-w-2xl text-xs font-medium leading-relaxed text-white/90 sm:text-sm md:text-base">
           เรียนรู้ศิลปะการทำขนมอบจากเชฟมืออาชีพ ในบรรยากาศอบอุ่นสไตล์อาร์ทิซาน
-        </motion.p>
+        </p>
       </div>
     </section>
   );

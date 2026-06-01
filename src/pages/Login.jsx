@@ -1,3 +1,13 @@
+/**
+ * Login.jsx — หน้าเข้าสู่ระบบ
+ *
+ * ไฟล์นี้แสดงฟอร์มสำหรับ login ด้วย email และ password
+ * เรียกใช้ login() จาก AuthContext ซึ่งเป็น async function
+ * แก้ bug: login() ต้องถูก await เพราะเป็น async —
+ * ถ้าไม่ await จะได้ Promise กลับมาแทน { ok, message }
+ * ทำให้ result.ok เป็น undefined และ navigate ถูกเรียกทุกครั้ง
+ */
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -9,18 +19,32 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/lib/AuthContext";
 
+/**
+ * Login — หน้า login ที่รับ email และ password
+ * มี demo credentials ตั้งต้นสำหรับทดสอบ
+ */
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  // ตั้งค่า demo credentials ไว้ล่วงหน้าเพื่อสะดวกในการทดสอบ
   const [email, setEmail] = useState("demo@panglaong.app");
   const [password, setPassword] = useState("123456");
 
-  const handleSubmit = (e) => {
+  /**
+   * handleSubmit — จัดการการ submit ฟอร์ม login
+   * แก้ bug: await login() เพื่อรอผลจาก API
+   * login() เป็น async — ถ้าไม่ await จะได้ Promise กลับมา ไม่ใช่ { ok, message }
+   */
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = login({ email, password });
 
+    // await จำเป็นมาก — login() เป็น async function ใน AuthContext
+    const result = await login({ email, password });
+
+    // ตรวจสอบผลลัพธ์ก่อนตัดสินใจ navigate
     if (!result.ok) {
-      toast.error(result.message);
+      toast.error(result.message || "เข้าสู่ระบบไม่สำเร็จ");
       return;
     }
 
@@ -43,6 +67,7 @@ export default function Login() {
       }
     >
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* ช่องกรอก email พร้อม icon */}
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <div className="relative">
@@ -58,6 +83,7 @@ export default function Login() {
           </div>
         </div>
 
+        {/* ช่องกรอก password พร้อม icon */}
         <div className="space-y-2">
           <Label htmlFor="password">Password</Label>
           <div className="relative">
@@ -78,6 +104,7 @@ export default function Login() {
         </Button>
       </form>
 
+      {/* link สำหรับผู้ใช้ที่ลืมรหัสผ่าน */}
       <Link to="/forgot-password" className="mt-4 inline-block text-sm text-primary hover:underline">
         ลืมรหัสผ่าน?
       </Link>

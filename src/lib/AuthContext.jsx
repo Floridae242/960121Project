@@ -1,23 +1,46 @@
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+/**
+ * AuthContext.jsx — Context สำหรับจัดการสถานะการ Authentication ทั่วแอป
+ *
+ * ไฟล์นี้สร้าง React Context ที่เก็บสถานะ user, loading และ error
+ * รวมถึงฟังก์ชัน login, register และ logout
+ * ใช้ localStorage เพื่อ persist ข้อมูล user ระหว่าง session
+ * component ใด ๆ ในแอปสามารถเรียกใช้ useAuth() เพื่อเข้าถึงข้อมูลเหล่านี้
+ */
 
-import { DEMO_USER } from "@/lib/app-params";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { apiLogin, apiLogout, apiRegister } from "@/api/apiClient";
 
 const AUTH_STORAGE_KEY = "panglaong-user";
 const AuthContext = createContext(null);
 
+/**
+ * readUserFromStorage — อ่านข้อมูล user ที่บันทึกไว้จาก localStorage
+ * ส่งคืน null ถ้าไม่มีข้อมูลหรือ parse ไม่ได้
+ */
 function readUserFromStorage() {
   try {
     const raw = window.localStorage.getItem(AUTH_STORAGE_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch {
+    // localStorage อาจถูกปิดใน private mode หรือ data เสียหาย
     return null;
   }
 }
 
+/**
+ * AuthProvider — Provider component ที่ครอบทั้งแอป
+ * ใส่ไว้ที่ App.jsx เพื่อให้ทุก component เข้าถึง auth state ได้
+ */
 export function AuthProvider({ children }) {
+  // โหลด user จาก localStorage ทันทีเมื่อ mount — ไม่ต้องรอ fetch
   const [user, setUser] = useState(() => readUserFromStorage());
   const [authError, setAuthError] = useState(null);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(false);
 
+  /**
+   * saveUser — อัปเดต state และ localStorage พร้อมกัน
+   * เมื่อ logout ส่ง null มา จะลบ key ออกจาก localStorage
+   */
   const saveUser = useCallback((nextUser) => {
     setUser(nextUser);
     if (nextUser) {
@@ -27,53 +50,71 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  /**
+   * login — เรียก API เพื่อเข้าสู่ระบบและอัปเดต state
+   * ส่งคืน { ok: true } เมื่อสำเร็จ หรือ { ok: false, message } เมื่อล้มเหลว
+   */
   const login = useCallback(
-    ({ email, password }) => {
-      if (email === DEMO_USER.email && password === DEMO_USER.password) {
-        const nextUser = { name: DEMO_USER.name, email: DEMO_USER.email };
+    async ({ email, password }) => {
+      setIsLoadingAuth(true);
+      setAuthError(null); // ล้าง error เก่าก่อนเริ่ม request ใหม่
+      try {
+        const nextUser = await apiLogin({ email, password });
         saveUser(nextUser);
-        setAuthError(null);
         return { ok: true };
+      } catch (err) {
+        const error = { message: err.message };
+        setAuthError(error);
+        return { ok: false, message: err.message };
+      } finally {
+        // ปิด loading ทั้งกรณีสำเร็จและล้มเหลว
+        setIsLoadingAuth(false);
       }
-
-      const error = { type: "auth_required", message: "Invalid email or password" };
-      setAuthError(error);
-      return { ok: false, message: error.message };
     },
-    [saveUser],
+    [saveUser]
   );
 
+  /**
+   * register — เรียก API เพื่อสมัครสมาชิกและ login อัตโนมัติ
+   * ส่งคืน { ok: true } เมื่อสำเร็จ หรือ { ok: false, message } เมื่อล้มเหลว
+   */
   const register = useCallback(
-    ({ name, email }) => {
-      const nextUser = { name, email };
-      saveUser(nextUser);
-      setAuthError(null);
-      return { ok: true };
+    async ({ name, email, password }) => {
+      setIsLoadingAuth(true);
+      setAuthError(null); // ล้าง error เก่าก่อนเริ่ม request ใหม่
+      try {
+        const nextUser = await apiRegister({ name, email, password });
+        saveUser(nextUser);
+        return { ok: true };
+      } catch (err) {
+        const error = { message: err.message };
+        setAuthError(error);
+        return { ok: false, message: err.message };
+      } finally {
+        setIsLoadingAuth(false);
+      }
     },
-    [saveUser],
+    [saveUser]
   );
 
+  /**
+   * logout — ล้าง token จาก localStorage และ reset state
+   */
   const logout = useCallback(() => {
-    saveUser(null);
+    apiLogout(); // ลบ token จาก localStorage
+    saveUser(null); // ล้าง user state และ user key ใน localStorage
     setAuthError(null);
   }, [saveUser]);
 
-  const checkUserAuth = useCallback(() => {
-    const storedUser = readUserFromStorage();
-    setUser(storedUser);
-    setAuthError(null);
-    return storedUser;
-  }, []);
-
-  const navigateToLogin = useCallback(() => {
-    window.location.href = "/login";
-  }, []);
-
+  /**
+   * value — รวม state และ function ทั้งหมดที่ export ออกไป
+   * useMemo ป้องกัน re-render ที่ไม่จำเป็นเมื่อ ref ของ object เปลี่ยน
+   */
   const value = useMemo(
     () => ({
       user,
       isAuthenticated: Boolean(user),
-      isLoadingAuth: false,
+      isLoadingAuth,
       isLoadingPublicSettings: false,
       authError,
       authChecked: true,
@@ -81,20 +122,23 @@ export function AuthProvider({ children }) {
       login,
       register,
       logout,
-      navigateToLogin,
-      checkUserAuth,
+      // redirect ไป login page — ใช้ในกรณีที่ hook ถูกเรียกนอก Router
+      navigateToLogin: () => { window.location.href = "/login"; },
+      checkUserAuth: () => readUserFromStorage(),
       checkAppState: () => {},
     }),
-    [user, authError, login, register, logout, navigateToLogin, checkUserAuth],
+    [user, isLoadingAuth, authError, login, register, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
+/**
+ * useAuth — custom hook สำหรับเข้าถึง auth context
+ * ต้องใช้ภายใน AuthProvider เท่านั้น — จะ throw ถ้าใช้นอก provider
+ */
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 }
