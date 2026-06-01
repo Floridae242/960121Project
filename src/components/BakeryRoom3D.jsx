@@ -1,11 +1,8 @@
 /* eslint-disable react/no-unknown-property -- react-three-fiber intrinsics (intensity, position, object ฯลฯ) ไม่ใช่ DOM props */
-import { useRef, useMemo, Suspense } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useMemo, Suspense } from "react";
+import { Canvas } from "@react-three/fiber";
 import { useTexture, useGLTF, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
-
-const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
 // โมเดลห้องเบเกอรี่: geometry บีบอัดด้วย Draco (52MB OBJ → 1.9MB GLB)
 // decoder โหลดจาก /draco/ ในเครื่อง (self-host) ไม่พึ่ง CDN ภายนอก
@@ -47,21 +44,11 @@ function RoomModel() {
     return cloned;
   }, [gltfScene, textures]);
 
-  const ref = useRef();
-  const reduce = useMediaQuery(REDUCED_MOTION_QUERY);
-
-  // การหมุนคุมด้วย OrbitControls (drag) แล้ว — useFrame เหลือแค่ลอยขึ้นลงเบาๆ ให้ดูมีชีวิต
-  // ปิด bob เมื่อผู้ใช้เปิด reduced motion
-  useFrame(({ clock }) => {
-    if (!ref.current) return;
-    ref.current.position.y = reduce ? 0 : Math.sin(clock.elapsedTime * 0.5) * 0.06;
-  });
-
-  return <primitive ref={ref} object={scene} scale={1.6} />;
+  // โมเดลอยู่นิ่ง ไม่มีการหมุน/ขยับอัตโนมัติ — การหมุนทั้งหมดมาจากผู้ใช้ลาก (OrbitControls)
+  return <primitive object={scene} scale={1.6} />;
 }
 
 export default function BakeryRoom3D({ className = "" }) {
-  const reduce = useMediaQuery(REDUCED_MOTION_QUERY);
   return (
     <div className={`w-full h-full ${className}`}>
       <Canvas
@@ -77,8 +64,8 @@ export default function BakeryRoom3D({ className = "" }) {
         <Suspense fallback={null}>
           <RoomModel />
         </Suspense>
-        {/* Drag เพื่อหมุนโมเดล — ปิด zoom/pan ไว้เพื่อให้ scroll หน้าเว็บยังทำงานปกติ
-            auto-rotate ช้าๆ ช่วยให้ผู้ใช้รู้ว่าหมุนได้ และจะหยุดเองตอนผู้ใช้ลากอยู่ */}
+        {/* หมุนได้ด้วยการลากเท่านั้น (ไม่มี auto-rotate)
+            ปิด zoom/pan ไว้เพื่อให้ scroll หน้าเว็บยังทำงานปกติ */}
         <OrbitControls
           makeDefault
           enablePan={false}
@@ -86,8 +73,6 @@ export default function BakeryRoom3D({ className = "" }) {
           enableDamping
           dampingFactor={0.08}
           rotateSpeed={0.6}
-          autoRotate={!reduce}
-          autoRotateSpeed={0.6}
           minPolarAngle={Math.PI * 0.18}
           maxPolarAngle={Math.PI * 0.52}
         />
