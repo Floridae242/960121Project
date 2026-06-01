@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Top shell -->
+  <ellipse cx="50" cy="35" rx="30" ry="18"/>
+  <!-- Top shell foot (bumpy edge) -->
+  <path d="M20 40 C24 44, 28 42, 32 44 C36 46, 40 44, 44 46 C48 48, 52 46, 56 48 C60 50, 64 48, 68 46 C72 44, 76 46, 80 44 L80 40"/>
+  <!-- Filling middle -->
+  <path d="M20 44 L80 44 L80 56 L20 56 Z" stroke-width="2.5"/>
+  <!-- Bottom shell foot -->
+  <path d="M20 60 C24 56, 28 58, 32 56 C36 54, 40 56, 44 54 C48 52, 52 54, 56 52 C60 50, 64 52, 68 54 C72 56, 76 54, 80 56 L80 60"/>
+  <!-- Bottom shell -->
+  <ellipse cx="50" cy="65" rx="30" ry="18"/>
+  <!-- Top shell texture dots -->
+  <circle cx="40" cy="32" r="2" fill="currentColor" stroke="none"/>
+  <circle cx="50" cy="28" r="2" fill="currentColor" stroke="none"/>
+  <circle cx="60" cy="32" r="2" fill="currentColor" stroke="none"/>
+</svg>

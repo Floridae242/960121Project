@@ -34,4 +34,38 @@ export default defineConfig({
       },
     },
   },
+
+  build: {
+    // three.js chunk ใหญ่โดยตั้งใจ แต่โหลดแบบ async เท่านั้น จึงไม่เตือน
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        /**
+         * แยกเฉพาะ vendor "หนักและใช้ร่วมกัน" เป็น chunk ตามกลุ่ม
+         * ตั้งใจไม่ทำ catch-all "vendor" เพราะจะ override การ split อัตโนมัติของ Rollup
+         * และดึง dep ที่ใช้เฉพาะ lazy route (Stripe, react-hook-form, zod) กลับมา eager
+         * → ปล่อยให้ Rollup จัด dep ที่เหลือไปอยู่กับ chunk ของ route ที่ใช้มันเอง
+         */
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return undefined;
+          // three.js + react-three — โหลดเฉพาะตอน hero 3D ถูก mount (async)
+          if (id.includes("three") || id.includes("@react-three")) return "three";
+          if (id.includes("framer-motion")) return "motion";
+          if (id.includes("recharts") || id.includes("/d3-")) return "charts";
+          if (id.includes("leaflet")) return "maps";
+          if (id.includes("jspdf") || id.includes("html2canvas")) return "pdf";
+          // react core (leaf chunk) — แชร์ทุก route จึง group ไว้เพื่อ cache
+          if (
+            id.includes("node_modules/react-dom/") ||
+            id.includes("node_modules/react/") ||
+            id.includes("node_modules/scheduler/")
+          ) {
+            return "react-vendor";
+          }
+          // ที่เหลือ: undefined → ให้ Rollup split ตามการใช้งานจริง (eager vs lazy)
+          return undefined;
+        },
+      },
+    },
+  },
 });

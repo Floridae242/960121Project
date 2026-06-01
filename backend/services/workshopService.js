@@ -30,7 +30,9 @@ const BASE_QUERY = `
     w.description,
     COALESCE(SUM(b.seat_count), 0)                     AS bookedSeats,
     w.max_capacity - COALESCE(SUM(b.seat_count), 0)   AS seatsLeft,
-    (w.max_capacity <= COALESCE(SUM(b.seat_count), 0)) AS isFull
+    (w.max_capacity <= COALESCE(SUM(b.seat_count), 0)) AS isFull,
+    (SELECT slot_text FROM workshop_slots
+     WHERE workshop_id = w.id ORDER BY id ASC LIMIT 1) AS dateText
   FROM workshops w
   LEFT JOIN bookings b
     ON b.workshop_id = w.id AND b.status = 'confirmed'
@@ -73,7 +75,22 @@ async function getById(id) {
     [id]
   );
 
-  return { ...rows[0], isFull: Boolean(rows[0].isFull), slots };
+  // ดึง seats ที่จองแล้วในแต่ละ slot — ใช้แสดงที่นั่งที่ถูกจองจริงใน seat picker
+  const [bookedRows] = await db.query(
+    `SELECT slot_id, seats_json FROM bookings
+     WHERE workshop_id = ? AND status = 'confirmed'`,
+    [id]
+  );
+
+  // จัด format เป็น { slotId: ['A1', 'A2', ...] } เพื่อให้ frontend ใช้งานง่าย
+  const bookedBySlot = {};
+  for (const row of bookedRows) {
+    const seats = JSON.parse(row.seats_json);
+    if (!bookedBySlot[row.slot_id]) bookedBySlot[row.slot_id] = [];
+    bookedBySlot[row.slot_id].push(...seats);
+  }
+
+  return { ...rows[0], isFull: Boolean(rows[0].isFull), slots, bookedBySlot };
 }
 
 module.exports = { getAll, getById };

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Outer donut ring -->
+  <circle cx="50" cy="50" r="36"/>
+  <!-- Inner hole -->
+  <circle cx="50" cy="50" r="14"/>
+  <!-- Glaze wavy edge -->
+  <path d="M22 38 C26 28, 36 18, 50 16 C64 18, 74 28, 78 38 C76 34, 70 30, 62 28 C56 26, 44 26, 38 28 C30 30, 24 34, 22 38Z" fill="currentColor" stroke="none" opacity="0.12"/>
+  <path d="M22 38 C26 28, 36 18, 50 16 C64 18, 74 28, 78 38" stroke-width="2.5"/>
+  <!-- Sprinkle lines -->
+  <line x1="34" y1="32" x2="30" y2="26" stroke-width="2.5" transform="rotate(-20 32 29)"/>
+  <line x1="50" y1="26" x2="50" y2="20" stroke-width="2.5"/>
+  <line x1="66" y1="32" x2="70" y2="26" stroke-width="2.5" transform="rotate(20 68 29)"/>
+  <line x1="40" y1="38" x2="36" y2="32" stroke-width="2.5" transform="rotate(15 38 35)"/>
+  <line x1="60" y1="38" x2="64" y2="32" stroke-width="2.5" transform="rotate(-15 62 35)"/>
+</svg>

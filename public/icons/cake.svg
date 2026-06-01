@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Candle -->
+  <rect x="46" y="8" width="8" height="14" rx="2"/>
+  <!-- Flame -->
+  <path d="M50 8 C48 5, 46 3, 48 1 C50 3, 52 5, 50 8Z" fill="currentColor" stroke-width="1.5"/>
+  <!-- Top tier -->
+  <rect x="28" y="30" width="44" height="18" rx="3"/>
+  <!-- Frosting drip top tier -->
+  <path d="M28 33 C34 29, 40 31, 46 29 C52 27, 58 30, 64 28 C70 26, 72 30, 72 33" stroke-width="2.5"/>
+  <!-- Bottom tier -->
+  <rect x="16" y="55" width="68" height="20" rx="3"/>
+  <!-- Frosting drip bottom tier -->
+  <path d="M16 58 C22 54, 30 56, 38 54 C46 52, 54 55, 62 53 C70 51, 76 54, 84 56 L84 58" stroke-width="2.5"/>
+  <!-- Plate -->
+  <ellipse cx="50" cy="75" rx="38" ry="5"/>
+  <!-- Decoration dots top tier -->
+  <circle cx="42" cy="40" r="2.5" fill="currentColor" stroke="none"/>
+  <circle cx="50" cy="40" r="2.5" fill="currentColor" stroke="none"/>
+  <circle cx="58" cy="40" r="2.5" fill="currentColor" stroke="none"/>
+</svg>

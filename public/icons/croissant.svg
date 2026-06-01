@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Croissant body -->
+  <path d="M50 22 C30 18, 14 30, 16 50 C18 66, 30 76, 50 78 C70 76, 82 66, 84 50 C86 30, 70 18, 50 22Z" stroke-width="3.5" fill="none"/>
+  <!-- Left horn -->
+  <path d="M16 50 C10 42, 8 30, 18 24 C22 28, 20 38, 24 46"/>
+  <!-- Right horn -->
+  <path d="M84 50 C90 42, 92 30, 82 24 C78 28, 80 38, 76 46"/>
+  <!-- Layers texture lines -->
+  <path d="M32 42 C38 38, 50 37, 62 40" stroke-width="2.5"/>
+  <path d="M30 52 C38 48, 52 47, 66 50" stroke-width="2.5"/>
+  <path d="M34 62 C42 58, 54 57, 64 60" stroke-width="2.5"/>
+</svg>
