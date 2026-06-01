@@ -1,16 +1,20 @@
 import { lazy, Suspense } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 // โหลด 3D scene แบบ lazy — แยก three.js ออกจาก initial bundle
 // เพื่อไม่ให้ block first paint ของ hero (ดู Suspense fallback ด้านล่าง)
 const BakeryRoom3D = lazy(() => import("./BakeryRoom3D"));
 
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 32 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay },
-});
+// เมื่อผู้ใช้เปิด prefers-reduced-motion ให้แสดงทันทีโดยไม่มีการเลื่อน/เฟด
+const fadeUp = (delay = 0, reduce = false) =>
+  reduce
+    ? { initial: { opacity: 1, y: 0 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
+    : {
+        initial: { opacity: 0, y: 32 },
+        animate: { opacity: 1, y: 0 },
+        transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay },
+      };
 
 const BADGES = [
   { icon: "⭐", value: "4.9", label: "Google Reviews" },
@@ -20,6 +24,7 @@ const BADGES = [
 
 export default function HeroSection() {
   const isStacked = useMediaQuery("(max-width: 900px)");
+  const reduce = useReducedMotion();
 
   return (
     <section style={{
@@ -70,7 +75,7 @@ export default function HeroSection() {
           textAlign: isStacked ? "center" : "left",
         }}>
           {/* Eyebrow */}
-          <motion.div {...fadeUp(0)} style={{
+          <motion.div {...fadeUp(0, reduce)} style={{
             display: "flex", alignItems: "center", gap: "14px", marginBottom: "28px",
             justifyContent: isStacked ? "center" : "flex-start",
           }}>
@@ -84,7 +89,7 @@ export default function HeroSection() {
           </motion.div>
 
           {/* H1 — editorial split */}
-          <motion.h1 {...fadeUp(0.1)} style={{
+          <motion.h1 {...fadeUp(0.1, reduce)} style={{
             fontFamily: "'Playfair Display', Georgia, serif",
             fontWeight: 700,
             lineHeight: 1.05,
@@ -111,7 +116,7 @@ export default function HeroSection() {
           </motion.h1>
 
           {/* H2 subheadline */}
-          <motion.p {...fadeUp(0.2)} style={{
+          <motion.p {...fadeUp(0.2, reduce)} style={{
             fontSize: "clamp(15px,1.3vw,17px)",
             color: "var(--wm-muted)", lineHeight: 1.75,
             maxWidth: "440px", marginBottom: "44px",
@@ -125,7 +130,7 @@ export default function HeroSection() {
           </motion.p>
 
           {/* Two buttons */}
-          <motion.div {...fadeUp(0.3)} style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginBottom: "48px", justifyContent: isStacked ? "center" : "flex-start" }}>
+          <motion.div {...fadeUp(0.3, reduce)} style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginBottom: "48px", justifyContent: isStacked ? "center" : "flex-start" }}>
             <button
               onClick={() => document.getElementById("classes-section")?.scrollIntoView({ behavior: "smooth" })}
               style={{
@@ -184,7 +189,7 @@ export default function HeroSection() {
           </motion.div>
 
           {/* 3 Social proof badges */}
-          <motion.div {...fadeUp(0.45)} style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: isStacked ? "center" : "flex-start" }}>
+          <motion.div {...fadeUp(0.45, reduce)} style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: isStacked ? "center" : "flex-start" }}>
             {BADGES.map(({ icon, value, label }) => (
               <div key={label} style={{
                 display: "flex", alignItems: "center", gap: "10px",
@@ -252,9 +257,9 @@ export default function HeroSection() {
 
       {/* Scroll indicator */}
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={{ opacity: reduce ? 1 : 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
+        transition={{ delay: reduce ? 0 : 1.2, duration: reduce ? 0 : 0.6 }}
         style={{
           position: "absolute", bottom: "36px", left: "50%",
           transform: "translateX(-50%)",

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const SOCIAL = [
@@ -25,6 +25,7 @@ export default function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
   const isStacked = useMediaQuery("(max-width: 768px)");
+  const reduce = useReducedMotion();
 
   const set = (field) => (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
@@ -71,10 +72,10 @@ export default function ContactSection() {
         gap: isStacked ? "48px" : "80px", alignItems: "start",
       }}>
         <motion.div
-          initial={{ opacity: 0, x: -24 }}
+          initial={reduce ? { opacity: 1, x: 0 } : { opacity: 0, x: -24 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: reduce ? 0 : 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           <div style={{
             fontSize: "10px", fontWeight: 700, letterSpacing: "0.35em",
@@ -121,10 +122,10 @@ export default function ContactSection() {
 
         <motion.form
           onSubmit={handleSubmit}
-          initial={{ opacity: 0, x: 24 }}
+          initial={reduce ? { opacity: 1, x: 0 } : { opacity: 0, x: 24 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          transition={{ duration: reduce ? 0 : 0.6, ease: [0.16, 1, 0.3, 1], delay: reduce ? 0 : 0.1 }}
           style={{ display: "flex", flexDirection: "column", gap: "14px" }}
         >
           <div style={{ display: "grid", gridTemplateColumns: isStacked ? "1fr" : "1fr 1fr", gap: "12px" }}>
