@@ -46,18 +46,26 @@ npm install
 cp .env.example .env       # then fill in the values (see below)
 ```
 
-Create the database and load schema + sample data:
+Initialize the database in one step — `init-db` creates the database (if missing)
+and loads `schema.sql` + `seed.sql` using the values from your `.env`:
 
 ```bash
-mysql -u root -p -e "CREATE DATABASE panglaong_db CHARACTER SET utf8mb4;"
-mysql -u root -p panglaong_db < schema.sql
-mysql -u root -p panglaong_db < seed.sql
+npm run init-db
 ```
+
+> Prefer to do it by hand? The equivalent manual steps are:
+> ```bash
+> mysql -u root -p -e "CREATE DATABASE panglaong_db CHARACTER SET utf8mb4;"
+> mysql -u root -p panglaong_db < schema.sql
+> mysql -u root -p panglaong_db < seed.sql
+> ```
 
 Start the API (must be running on port 3000 for the frontend to load data):
 
 ```bash
-npm start        # node server.js → http://localhost:3000
+npm start          # node server.js → http://localhost:3000
+# npm run dev      # auto-restart on changes (nodemon)
+# npm run start:prod  # build the frontend and serve it from Express
 ```
 
 ### Required environment variables (`backend/.env`)
