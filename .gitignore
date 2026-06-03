@@ -35,3 +35,9 @@ scripts/shots/
 
 # local agent tooling
 .superpowers/
+
+# impeccable skill (installed via npx impeccable skills install)
+.claude/
+.cursor/
+.gemini/
+.impeccable/

@@ -78,9 +78,12 @@ const FEATURES = [
 
 function FeatureCard({ icon, eyebrow, title, body, delay }) {
   const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
+  const reduce = useMediaQuery("(prefers-reduced-motion: reduce)");
+  // reduced motion → แสดงทันที ไม่ต้องรอ scroll reveal
+  const [visible, setVisible] = useState(reduce);
 
   useEffect(() => {
+    if (reduce) return;
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
@@ -89,7 +92,7 @@ function FeatureCard({ icon, eyebrow, title, body, delay }) {
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, []);
+  }, [reduce]);
 
   return (
     <div
@@ -164,12 +167,14 @@ function FeatureCard({ icon, eyebrow, title, body, delay }) {
 
 export default function FeaturesSection() {
   const headerRef = useRef(null);
-  const [headerVisible, setHeaderVisible] = useState(false);
   const isTablet = useMediaQuery("(max-width: 1024px)");
   const isMobile = useMediaQuery("(max-width: 640px)");
+  const reduce = useMediaQuery("(prefers-reduced-motion: reduce)");
   const featureCols = isMobile ? 1 : isTablet ? 2 : 3;
+  const [headerVisible, setHeaderVisible] = useState(reduce);
 
   useEffect(() => {
+    if (reduce) return;
     const el = headerRef.current;
     if (!el) return;
     const obs = new IntersectionObserver(
@@ -178,7 +183,7 @@ export default function FeaturesSection() {
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, []);
+  }, [reduce]);
 
   return (
     <section

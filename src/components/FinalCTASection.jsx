@@ -1,17 +1,18 @@
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useAuth } from "@/lib/AuthContext";
 
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 28 },
+const fadeUp = (delay = 0, reduce = false) => ({
+  initial: reduce ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.4 },
-  transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay },
+  transition: { duration: reduce ? 0 : 0.7, ease: [0.16, 1, 0.3, 1], delay: reduce ? 0 : delay },
 });
 
 export default function FinalCTASection() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const reduce = useReducedMotion();
 
   const primaryAction = () =>
     isAuthenticated
@@ -66,7 +67,7 @@ export default function FinalCTASection() {
         textAlign: "center",
       }}>
         {/* Eyebrow */}
-        <motion.div {...fadeUp(0)} style={{
+        <motion.div {...fadeUp(0, reduce)} style={{
           display: "inline-flex", alignItems: "center", gap: "14px", marginBottom: "32px",
         }}>
           <div style={{ width: "32px", height: "1.5px", background: "var(--wm-bg)", opacity: 0.6 }} />
@@ -80,7 +81,7 @@ export default function FinalCTASection() {
         </motion.div>
 
         {/* Headline */}
-        <motion.h2 {...fadeUp(0.1)} style={{
+        <motion.h2 {...fadeUp(0.1, reduce)} style={{
           fontFamily: "'Playfair Display', Georgia, serif",
           fontSize: "clamp(40px, 7vw, 88px)",
           fontWeight: 700, lineHeight: 1.04,
@@ -93,7 +94,7 @@ export default function FinalCTASection() {
         </motion.h2>
 
         {/* Subheadline */}
-        <motion.p {...fadeUp(0.2)} style={{
+        <motion.p {...fadeUp(0.2, reduce)} style={{
           fontSize: "clamp(15px, 1.4vw, 18px)",
           color: "rgba(255,248,240,0.85)", lineHeight: 1.75,
           maxWidth: "520px", margin: "0 auto 48px",
@@ -104,7 +105,7 @@ export default function FinalCTASection() {
         </motion.p>
 
         {/* CTA buttons */}
-        <motion.div {...fadeUp(0.3)} style={{
+        <motion.div {...fadeUp(0.3, reduce)} style={{
           display: "flex", gap: "16px", flexWrap: "wrap", justifyContent: "center",
         }}>
           <button
@@ -167,7 +168,7 @@ export default function FinalCTASection() {
         </motion.div>
 
         {/* Reassurance line */}
-        <motion.p {...fadeUp(0.4)} style={{
+        <motion.p {...fadeUp(0.4, reduce)} style={{
           marginTop: "32px",
           fontSize: "12px", letterSpacing: "0.08em",
           color: "rgba(255,248,240,0.6)",

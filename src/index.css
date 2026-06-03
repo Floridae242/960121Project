@@ -143,3 +143,18 @@
   background-color: var(--wm-bg);
   color: var(--wm-navy);
 }
+
+/* Reduced motion — เคารพ prefers-reduced-motion
+   ลด CSS transition/animation ทั้งหมดให้แทบจะทันที + ปิด smooth scroll
+   (ส่วน animation ที่ขับด้วย JS เช่น framer-motion และ 3D auto-rotate
+    จัดการแยกในคอมโพเนนต์ด้วย useReducedMotion / useMediaQuery) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
