@@ -87,13 +87,13 @@ async function handleFallback(path, options = {}) {
     }
 
     const localBookings = getLocalBookings();
-    
+
     // ตั้งค่าที่นั่งจองเริ่มต้นเพื่อให้ตรงกับระบบ Backend Seed
     const defaultBooked = {
-      1: ["A1","A3","A4","B1"],
-      3: ["A1","A3","B2","B4","C1","C3","C5"],
-      5: ["A1","A2","A3","A4","A5","B1","B2","B3","B4","B5"],
-      7: ["A1","A3","A5","B2","B4"],
+      1: ["A1", "A3", "A4", "B1"],
+      3: ["A1", "A3", "B2", "B4", "C1", "C3", "C5"],
+      5: ["A1", "A2", "A3", "A4", "A5", "B1", "B2", "B3", "B4", "B5"],
+      7: ["A1", "A3", "A5", "B2", "B4"],
     };
 
     const bookedBySlot = {};
@@ -135,7 +135,7 @@ async function handleFallback(path, options = {}) {
     const data = typeof options.body === "string" ? JSON.parse(options.body) : (options.body || {});
     const { workshopId, slotId, seats, name, phone } = data;
     const localBookings = getLocalBookings();
-    
+
     const bookingId = "BK-" + Math.floor(Math.random() * 900000 + 100000);
     const newBooking = {
       bookingId,
@@ -200,7 +200,7 @@ async function handleFallback(path, options = {}) {
  *
  * หากเชื่อมต่อล้มเหลว จะสลับไปใช้งาน handleFallback อัตโนมัติ
  */
-const USE_MOCK_DATA = true; // ตั้งเป็น true เพื่อใช้ข้อมูล 40 คลาสในเครื่องสำหรับการทดสอบเฉพาะ Frontend
+const USE_MOCK_DATA = false; // ตั้งเป็น true เพื่อใช้ข้อมูล 40 คลาสในเครื่องสำหรับการทดสอบเฉพาะ Frontend
 
 async function request(path, options = {}) {
   if (USE_MOCK_DATA) {
@@ -281,17 +281,17 @@ export async function fetchWorkshops() {
     tag: w.isFull
       ? "คลาสเต็ม"
       : w.bookedSeats > w.totalSeats / 2
-      ? "ยอดนิยม"
-      : w.id > 4
-      ? "คลาสใหม่"
-      : null,
+        ? "ยอดนิยม"
+        : w.id > 4
+          ? "คลาสใหม่"
+          : null,
     tagColor: w.isFull
       ? "neutral"
       : w.bookedSeats > w.totalSeats / 2
-      ? "green"
-      : w.id > 4
-      ? "blue"
-      : null,
+        ? "green"
+        : w.id > 4
+          ? "blue"
+          : null,
     rank: `#${i + 1}`,
   }));
 }
