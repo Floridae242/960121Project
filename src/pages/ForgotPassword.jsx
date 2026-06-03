@@ -1,3 +1,7 @@
+/**
+ * ForgotPassword.jsx — หน้า "ลืมรหัสผ่าน"
+ * ผู้ใช้กรอกอีเมลเพื่อขอลิงก์ตั้งรหัสผ่านใหม่ แล้วแสดงสถานะว่าส่งอีเมลแล้ว
+ */
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";

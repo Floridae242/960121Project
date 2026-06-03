@@ -1,3 +1,10 @@
+/**
+ * Home.jsx — หน้า Landing Page หลัก
+ *
+ * ประกอบ (compose) ทุก section ของหน้าแรกเข้าด้วยกันตามลำดับการเลื่อน:
+ * NavBar → Hero → Workshops (คลาส) → Features → Final CTA → Contact → Footer
+ * แต่ละ section แยกเป็นคอมโพเนนต์ของตัวเองเพื่อให้ดูแล/แก้ไขง่าย
+ */
 import NavBar from "@/components/NavBar";
 import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeaturesSection";
@@ -5,6 +12,7 @@ import WorkshopsSection from "@/components/WorkshopsSection";
 import FinalCTASection from "@/components/FinalCTASection";
 import ContactSection from "@/components/ContactSection";
 
+// Footer — แถบล่างสุด แสดงโลโก้และลิขสิทธิ์
 function Footer() {
   return (
     <footer style={{

@@ -1,7 +1,13 @@
+/**
+ * FinalCTASection.jsx — บล็อกปิดท้ายชวนให้ลงมือจอง (สีคาราเมล)
+ * เป็น "จุดเปลี่ยน" หลัก (conversion) ก่อนถึงส่วนติดต่อ
+ * ปุ่มหลักพาไปจองคลาส (หรือ /login ถ้ายังไม่ล็อกอิน)
+ */
 import { useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import { useAuth } from "@/lib/AuthContext";
 
+// fadeUp — เอฟเฟกต์เลื่อนขึ้น+จางเข้า (ปิดเมื่อผู้ใช้เปิด reduced motion)
 const fadeUp = (delay = 0, reduce = false) => ({
   initial: reduce ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 },
   whileInView: { opacity: 1, y: 0 },

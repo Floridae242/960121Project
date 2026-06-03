@@ -1,3 +1,9 @@
+/**
+ * UserNotRegisteredError.jsx — หน้าจอแจ้งเตือนเมื่อยังไม่ได้ล็อกอิน
+ *
+ * แสดงเมื่อผู้ใช้พยายามเข้าถึงหน้าที่ต้องล็อกอิน (เช่นการจอง) โดยที่ยังไม่ล็อกอิน
+ * พร้อมปุ่มพาไปหน้า login (รับ prop redirectTo ที่แนบ ?next ไว้กลับมาหน้าเดิม)
+ */
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";

@@ -1,3 +1,5 @@
+// GoogleIcon — ไอคอนโลโก้ Google (SVG) สำหรับปุ่ม "เข้าสู่ระบบด้วย Google"
+// รับ props ทั้งหมด (เช่น width/height/className) ส่งต่อให้ <svg>
 export default function GoogleIcon(props) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>

@@ -1,5 +1,10 @@
+/**
+ * use-mobile.jsx — hook ตรวจว่าหน้าจอเป็นขนาดมือถือหรือไม่
+ * คืนค่า true เมื่อความกว้างหน้าจอ < 768px และอัปเดตอัตโนมัติเมื่อ resize
+ */
 import * as React from "react"
 
+// เกณฑ์ความกว้าง (px) ที่ถือว่าเป็นมือถือ
 const MOBILE_BREAKPOINT = 768
 
 export function useIsMobile() {

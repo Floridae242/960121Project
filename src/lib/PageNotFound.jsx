@@ -1,3 +1,7 @@
+/**
+ * PageNotFound.jsx — หน้า 404 (ไม่พบหน้าที่ร้องขอ)
+ * แสดงเมื่อ URL ไม่ตรงกับ route ใดเลย พร้อมปุ่มกลับหน้าแรก
+ */
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";

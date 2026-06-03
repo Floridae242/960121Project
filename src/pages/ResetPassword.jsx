@@ -1,3 +1,7 @@
+/**
+ * ResetPassword.jsx — หน้าตั้งรหัสผ่านใหม่
+ * ผู้ใช้กรอกรหัสผ่านใหม่ + ยืนยัน แล้วบันทึก จากนั้นพากลับไปหน้า login
+ */
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";

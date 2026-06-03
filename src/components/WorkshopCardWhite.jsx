@@ -1,5 +1,10 @@
+/**
+ * WorkshopCardWhite.jsx — การ์ดแสดงคลาส 1 รายการในหน้าแคตตาล็อก
+ * แสดงรูป, ชื่อคลาส, เชฟ, ราคา และปุ่มจอง (ปิดปุ่มเมื่อคลาสเต็ม)
+ */
 import { motion } from "framer-motion";
 
+// แม็พ emoji ของคลาส → ไฟล์ไอคอน SVG ที่ใช้แสดง
 const EMOJI_TO_ICON = {
   "🥐": "/icons/croissant.svg",
   "🍩": "/icons/donut.svg",

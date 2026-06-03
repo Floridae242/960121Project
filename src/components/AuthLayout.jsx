@@ -1,3 +1,8 @@
+/**
+ * AuthLayout.jsx — เลย์เอาต์ร่วมของหน้า auth (login / register / ลืมรหัสผ่าน ฯลฯ)
+ * แบ่งจอเป็น 2 ฝั่ง: ฝั่งซ้ายเป็นภาพแบรนด์ (ซ่อนบนมือถือ), ฝั่งขวาเป็นฟอร์ม (children)
+ * รับ prop: title, subtitle, children (ฟอร์ม), footer (ลิงก์ด้านล่าง)
+ */
 import { Link } from "react-router-dom";
 import { APP_NAME } from "@/lib/app-params";
 

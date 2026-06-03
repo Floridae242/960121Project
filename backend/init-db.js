@@ -1,8 +1,18 @@
+/**
+ * init-db.js — สคริปต์ตั้งค่าฐานข้อมูลแบบขั้นตอนเดียว
+ *
+ * อ่านค่าการเชื่อมต่อจาก .env แล้ว:
+ *   1) สร้างฐานข้อมูล (ถ้ายังไม่มี)
+ *   2) รัน schema.sql เพื่อสร้างตาราง
+ *   3) รัน seed.sql เพื่อใส่ข้อมูลตัวอย่าง
+ * ใช้งานผ่าน: npm run init-db
+ */
 const fs = require("fs");
 const path = require("path");
 const mysql = require("mysql2/promise");
 require("dotenv").config();
 
+// init — ขั้นตอนหลักของการตั้งค่าฐานข้อมูลทั้งหมด
 async function init() {
   const dbConfig = {
     host: process.env.DB_HOST || "127.0.0.1",
@@ -35,22 +45,22 @@ async function init() {
   }
 
   try {
-    // 1. Create database
+    // 1. สร้างฐานข้อมูล (ถ้ายังไม่มี)
     console.log(`Creating database "${dbName}" if it does not exist...`);
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\`;`);
     console.log(`✓ Database "${dbName}" created or already exists.`);
 
-    // Use database
+    // เลือกใช้ฐานข้อมูลที่เพิ่งสร้าง
     await connection.query(`USE \`${dbName}\`;`);
 
-    // 2. Read and run schema.sql
+    // 2. อ่านและรัน schema.sql เพื่อสร้างตารางทั้งหมด
     console.log("Running schema.sql...");
     const schemaPath = path.join(__dirname, "schema.sql");
     const schemaSql = fs.readFileSync(schemaPath, "utf8");
     await executeSqlStatements(connection, schemaSql);
     console.log("✓ Schema created successfully.");
 
-    // 3. Read and run seed.sql
+    // 3. อ่านและรัน seed.sql เพื่อใส่ข้อมูลตัวอย่าง
     console.log("Running seed.sql...");
     const seedPath = path.join(__dirname, "seed.sql");
     const seedSql = fs.readFileSync(seedPath, "utf8");
@@ -67,12 +77,13 @@ async function init() {
   }
 }
 
+// executeSqlStatements — แยกไฟล์ SQL เป็นคำสั่งย่อยทีละคำสั่งแล้วรันตามลำดับ
 async function executeSqlStatements(connection, sqlText) {
-  // Remove comments and split by semicolon
+  // ตัด comment ออก แล้วแยกคำสั่งด้วยเครื่องหมาย ;
   const statements = sqlText
     .split(";")
     .map((statement) => {
-      // Remove SQL comments starting with --
+      // ลบบรรทัด comment ของ SQL ที่ขึ้นต้นด้วย --
       return statement
         .split("\n")
         .filter((line) => !line.trim().startsWith("--"))

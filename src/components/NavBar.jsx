@@ -1,3 +1,8 @@
+/**
+ * NavBar.jsx — แถบเมนูด้านบนแบบ fixed
+ * เริ่มต้นโปร่งใสทับ hero แล้วเปลี่ยนเป็นพื้นครีม + เงาเมื่อเลื่อนลง (scroll)
+ * โลโก้ซ้าย / ลิงก์กลาง (ซ่อนบนมือถือ) / ปุ่ม CTA ขวา
+ */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";

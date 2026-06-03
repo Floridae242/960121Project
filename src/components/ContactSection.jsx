@@ -1,8 +1,14 @@
+/**
+ * ContactSection.jsx — ส่วนติดต่อเรา (พื้นหลังสีเข้ม espresso)
+ * ฝั่งซ้ายเป็นข้อความ + ลิงก์โซเชียล, ฝั่งขวาเป็นฟอร์มติดต่อ
+ * ฟอร์ม validate ฝั่ง client แล้ว POST ไป /api/contact (มี fallback ถ้าไม่มี endpoint)
+ */
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { motion, useReducedMotion } from "framer-motion";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
+// ลิงก์โซเชียลมีเดีย (placeholder)
 const SOCIAL = [
   { label: "FB", href: "#" },
   { label: "IG", href: "#" },
