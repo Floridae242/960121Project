@@ -108,16 +108,6 @@ function FeatureCard({ icon, eyebrow, title, body, delay }) {
         transform: visible ? "translateY(0)" : "translateY(24px)",
         cursor: "default",
       }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = "rgba(192,133,82,0.5)";
-        e.currentTarget.style.boxShadow = "0 8px 40px rgba(75,46,43,0.1)";
-        e.currentTarget.style.transform = "translateY(-4px)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = "rgba(192,133,82,0.15)";
-        e.currentTarget.style.boxShadow = "none";
-        e.currentTarget.style.transform = "translateY(0)";
-      }}
     >
       {/* Corner accent */}
       <div style={{

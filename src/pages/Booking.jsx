@@ -56,6 +56,14 @@ const EMOJI_TO_ICON = {
   "🧁": "/icons/macaron.svg",
 };
 
+const CATEGORY_ICONS = {
+  "ทั้งหมด": "✨",
+  "ขนมปังอบ": "/icons/bread.svg",
+  "เค้กและขนมหวาน": "/icons/cake.svg",
+  "เบเกอรี่ฝรั่งเศส": "/icons/croissant.svg",
+  "โดนัทและฟริตเตอร์": "/icons/donut.svg",
+};
+
 const ROW_LABELS = ["A", "B", "C", "D", "E", "F"];
 const COLS_PER_ROW = 5;
 
@@ -85,6 +93,7 @@ export default function Booking() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedWorkshop, setSelectedWorkshop] = useState(/** @type {number | null} */ (queryId ? parseInt(queryId, 10) : null));
+  const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
   const [selectedSlot, setSelectedSlot] = useState("");     // slot text สำหรับแสดงผล
   const [selectedSlotId, setSelectedSlotId] = useState(null); // slot id สำหรับส่ง API
   const [selectedSeats, setSelectedSeats] = useState([]);
@@ -110,8 +119,13 @@ export default function Booking() {
 
         if (queryId) {
           const requestedId = parseInt(queryId, 10);
-          const exists = available.some((w) => w.id === requestedId);
-          setSelectedWorkshop(exists ? requestedId : null);
+          const found = available.find((w) => w.id === requestedId);
+          if (found) {
+            setSelectedWorkshop(requestedId);
+            setSelectedCategory(found.category);
+          } else {
+            setSelectedWorkshop(null);
+          }
         }
       })
       .catch((err) => {
@@ -137,6 +151,11 @@ export default function Booking() {
 
   /** @type {Workshop | undefined} */
   const workshop = workshops.find((w) => w.id === selectedWorkshop);
+
+  const categories = ["ทั้งหมด", ...new Set(workshops.map((w) => w.category).filter(Boolean))];
+  const filteredWorkshops = workshops.filter(
+    (w) => selectedCategory === "ทั้งหมด" || w.category === selectedCategory
+  );
 
   const validate = () => {
     const e = {};
@@ -287,29 +306,102 @@ export default function Booking() {
                   ) : workshops.length === 0 ? (
                     <div style={{ border: "1px solid var(--wm-border)", background: "#fff", padding: "24px", textAlign: "center", color: "var(--wm-muted)", fontSize: "14px" }}>ขณะนี้ไม่มีคลาสที่ว่างให้จอง</div>
                   ) : (
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px" }}>
-                      {workshops.map((w) => (
-                        <button
-                          key={w.id}
-                          type="button"
-                          onClick={() => { setSelectedWorkshop(w.id); setSelectedSlot(""); setSelectedSeats([]); setErrors((prev) => ({ ...prev, workshop: undefined })); }}
-                          style={{
-                            textAlign: "left", padding: "16px",
-                            border: selectedWorkshop === w.id ? "1.5px solid var(--wm-navy)" : "1px solid var(--wm-border)",
-                            background: selectedWorkshop === w.id ? "var(--wm-bg)" : "#fff",
-                            cursor: "pointer", transition: "all 0.2s",
-                          }}
-                        >
-                          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
-                            {EMOJI_TO_ICON[w.emoji] && (
-                              <img src={EMOJI_TO_ICON[w.emoji]} alt="" style={{ width: "20px", height: "20px", opacity: 0.75 }} />
-                            )}
-                            <p style={{ fontWeight: 700, color: "var(--wm-navy)", fontSize: "14px" }}>{w.title}</p>
-                          </div>
-                          <p style={{ fontSize: "12px", color: "var(--wm-muted)" }}>{w.chef} · ฿{w.price.toLocaleString()}</p>
-                        </button>
-                      ))}
-                    </div>
+                    <>
+                      {/* หมวดหมู่คลาส (Category Tabs) */}
+                      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "16px" }}>
+                        {categories.map((cat) => {
+                          const count = cat === "ทั้งหมด" ? workshops.length : workshops.filter((w) => w.category === cat).length;
+                          const isActive = selectedCategory === cat;
+                          return (
+                            <button
+                              key={cat}
+                              type="button"
+                              onClick={() => setSelectedCategory(cat)}
+                              style={{
+                                padding: "6px 12px",
+                                fontSize: "12.5px",
+                                fontWeight: 700,
+                                border: "1.5px solid",
+                                borderColor: isActive ? "var(--wm-navy)" : "var(--wm-border)",
+                                background: isActive ? "var(--wm-navy)" : "#fff",
+                                color: isActive ? "#fff" : "var(--wm-muted)",
+                                cursor: "pointer",
+                                transition: "all 0.15s ease",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "6px",
+                              }}
+                            >
+                              {CATEGORY_ICONS[cat] && (
+                                typeof CATEGORY_ICONS[cat] === "string" && CATEGORY_ICONS[cat].startsWith("/") ? (
+                                  <img
+                                    src={CATEGORY_ICONS[cat]}
+                                    alt=""
+                                    style={{
+                                      width: "12px",
+                                      height: "12px",
+                                      filter: isActive ? "invert(1)" : "none",
+                                      opacity: isActive ? 1 : 0.7,
+                                    }}
+                                  />
+                                ) : (
+                                  <span style={{ fontSize: "12px" }}>{CATEGORY_ICONS[cat]}</span>
+                                )
+                              )}
+                              <span>{cat}</span>
+                              <span style={{
+                                fontSize: "10px",
+                                fontWeight: 800,
+                                opacity: 0.9,
+                                background: isActive ? "rgba(255,255,255,0.2)" : "var(--wm-border)",
+                                color: isActive ? "#fff" : "var(--wm-navy)",
+                                padding: "1px 5px",
+                                borderRadius: "10px",
+                                minWidth: "14px",
+                                textAlign: "center"
+                              }}>
+                                {count}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* รายชื่อคลาส (Classes Grid) */}
+                      <motion.div 
+                        layout
+                        style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px" }}
+                      >
+                        <AnimatePresence mode="popLayout">
+                          {filteredWorkshops.map((w) => (
+                            <motion.button
+                              key={w.id}
+                              layout
+                              initial={{ opacity: 0, scale: 0.96 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.96 }}
+                              transition={{ duration: 0.15 }}
+                              type="button"
+                              onClick={() => { setSelectedWorkshop(w.id); setSelectedSlot(""); setSelectedSeats([]); setErrors((prev) => ({ ...prev, workshop: undefined })); }}
+                              style={{
+                                textAlign: "left", padding: "16px",
+                                border: selectedWorkshop === w.id ? "1.5px solid var(--wm-navy)" : "1px solid var(--wm-border)",
+                                background: selectedWorkshop === w.id ? "var(--wm-bg)" : "#fff",
+                                cursor: "pointer", transition: "all 0.2s",
+                              }}
+                            >
+                              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+                                {EMOJI_TO_ICON[w.emoji] && (
+                                  <img src={EMOJI_TO_ICON[w.emoji]} alt="" style={{ width: "20px", height: "20px", opacity: 0.75 }} />
+                                )}
+                                <p style={{ fontWeight: 700, color: "var(--wm-navy)", fontSize: "14px" }}>{w.title}</p>
+                              </div>
+                              <p style={{ fontSize: "12px", color: "var(--wm-muted)" }}>{w.chef} · ฿{w.price.toLocaleString()}</p>
+                            </motion.button>
+                          ))}
+                        </AnimatePresence>
+                      </motion.div>
+                    </>
                   )}
                   {errors.workshop && <p style={{ color: "var(--wm-red)", fontSize: "13px", marginTop: "8px" }}>{errors.workshop}</p>}
                 </section>

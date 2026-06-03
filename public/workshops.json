@@ -7,36 +7,25 @@
     "price": 3500,
     "bookedSeats": 4,
     "totalSeats": 12,
-    "seatsLeft": 3,
+    "seatsLeft": 8,
     "category": "เบเกอรี่ฝรั่งเศส",
     "emoji": "🥐",
     "tag": "เหลือน้อยมาก!",
     "tagColor": "red",
     "rank": "#1",
-    "image": "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80",
+    "image": "https://images.unsplash.com/photo-1612366747681-e4ca6992b1e9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fENyb2lzc2FudCUyME1hc3RlcmNsYXNzfGVufDB8fDB8fHww",
     "description": "เรียนรู้ความลับของเลเยอร์ที่สมบูรณ์แบบและการนวดเนยสไตล์ฝรั่งเศสขนานแท้",
     "dateText": "15 มิ.ย. 2026 | 09:00 - 16:00",
-    "slots": ["15 มิ.ย. 2026 | 09:00 - 16:00", "29 มิ.ย. 2026 | 09:00 - 16:00"],
-    "isFull": false
-  },
-  {
-    "id": 4,
-    "title": "ห้องปฏิบัติการมาการอง",
-    "chef": "เชฟ ปาริชาต",
-    "level": "ระดับกลาง",
-    "price": 4200,
-    "bookedSeats": 5,
-    "totalSeats": 10,
-    "seatsLeft": 5,
-    "category": "เค้กและขนมหวาน",
-    "emoji": "🎂",
-    "tag": "ขายดีที่สุด",
-    "tagColor": "orange",
-    "rank": "#2",
-    "image": "https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=600&q=80",
-    "description": "ฝึกทำมาการองฝรั่งเศสให้ได้ผิวเรียบ เท้าสวย พร้อมไส้ครีมหลากรส",
-    "dateText": "6 ก.ค. 2026 | 10:00 - 16:00",
-    "slots": ["6 ก.ค. 2026 | 10:00 - 16:00", "27 ก.ค. 2026 | 10:00 - 16:00"],
+    "slots": [
+      {
+        "id": 1,
+        "slot_text": "15 มิ.ย. 2026 | 09:00 - 16:00"
+      },
+      {
+        "id": 2,
+        "slot_text": "29 มิ.ย. 2026 | 09:00 - 16:00"
+      }
+    ],
     "isFull": false
   },
   {
@@ -52,11 +41,20 @@
     "emoji": "🍩",
     "tag": "ยอดนิยม",
     "tagColor": "green",
-    "rank": "#3",
+    "rank": "#2",
     "image": "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=600&q=80",
     "description": "สนุกกับการปั้นและเคลือบโดนัทหลากรสชาติ พร้อมเทคนิคการทอดให้ฟูนุ่ม",
     "dateText": "22 มิ.ย. 2026 | 10:00 - 15:00",
-    "slots": ["22 มิ.ย. 2026 | 10:00 - 15:00", "13 ก.ค. 2026 | 10:00 - 15:00"],
+    "slots": [
+      {
+        "id": 3,
+        "slot_text": "22 มิ.ย. 2026 | 10:00 - 15:00"
+      },
+      {
+        "id": 4,
+        "slot_text": "13 ก.ค. 2026 | 10:00 - 15:00"
+      }
+    ],
     "isFull": false
   },
   {
@@ -70,13 +68,1095 @@
     "seatsLeft": 0,
     "category": "ขนมปังอบ",
     "emoji": "🍞",
-    "tag": null,
-    "tagColor": null,
-    "rank": "#4",
+    "tag": "เต็มแล้ว",
+    "tagColor": "neutral",
+    "rank": "#3",
     "image": "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=600&q=80",
     "description": "เริ่มต้นทำขนมปังซาวร์โดว์ตั้งแต่การเลี้ยงหัวเชื้อจนถึงการอบให้ได้เปลือกกรอบ",
     "dateText": "29 มิ.ย. 2026 | 09:00 - 17:00",
-    "slots": ["29 มิ.ย. 2026 | 09:00 - 17:00", "20 ก.ค. 2026 | 09:00 - 17:00"],
+    "slots": [
+      {
+        "id": 5,
+        "slot_text": "29 มิ.ย. 2026 | 09:00 - 17:00"
+      },
+      {
+        "id": 6,
+        "slot_text": "20 ก.ค. 2026 | 09:00 - 17:00"
+      }
+    ],
     "isFull": true
+  },
+  {
+    "id": 4,
+    "title": "ห้องปฏิบัติการมาการอง",
+    "chef": "เชฟ ปาริชาต",
+    "level": "ระดับกลาง",
+    "price": 4200,
+    "bookedSeats": 5,
+    "totalSeats": 10,
+    "seatsLeft": 5,
+    "category": "เค้กและขนมหวาน",
+    "emoji": "🎂",
+    "tag": "ขายดีที่สุด",
+    "tagColor": "orange",
+    "rank": "#4",
+    "image": "https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=600&q=80",
+    "description": "ฝึกทำมาการองฝรั่งเศสให้ได้ผิวเรียบ เท้าสวย พร้อมไส้ครีมหลากรส",
+    "dateText": "6 ก.ค. 2026 | 10:00 - 16:00",
+    "slots": [
+      {
+        "id": 7,
+        "slot_text": "6 ก.ค. 2026 | 10:00 - 16:00"
+      },
+      {
+        "id": 8,
+        "slot_text": "27 ก.ค. 2026 | 10:00 - 16:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 5,
+    "title": "พรีเมียมคัพเค้กและบัตเตอร์ครีมดอกไม้",
+    "chef": "เชฟ นภัสสร",
+    "level": "เริ่มต้น",
+    "price": 3000,
+    "bookedSeats": 0,
+    "totalSeats": 12,
+    "seatsLeft": 12,
+    "category": "เค้กและขนมหวาน",
+    "emoji": "🧁",
+    "tag": "คลาสใหม่",
+    "tagColor": "blue",
+    "rank": "#5",
+    "image": "https://media.istockphoto.com/id/1323793831/photo/buttercream-flower-cupcakes-recipe-photography.webp?a=1&b=1&s=612x612&w=0&k=20&c=OiYKfVFCOuXfmotisixp6f6Q0Pk4UEselbzxmQx8bgU=",
+    "description": "เรียนรู้การอบคัพเค้กเนื้อนุ่มและเทคนิคการบีบบัตเตอร์ครีมดอกไม้สไตล์พรีเมียม",
+    "dateText": "12 ก.ค. 2026 | 13:00 - 17:00",
+    "slots": [
+      {
+        "id": 9,
+        "slot_text": "12 ก.ค. 2026 | 13:00 - 17:00"
+      },
+      {
+        "id": 10,
+        "slot_text": "26 ก.ค. 2026 | 13:00 - 17:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 6,
+    "title": "มาสเตอร์คลาสครัวซองต์ช็อกโกแลตทูโทน",
+    "chef": "เชฟ พงศธร",
+    "level": "ระดับกลาง",
+    "price": 3800,
+    "bookedSeats": 0,
+    "totalSeats": 10,
+    "seatsLeft": 10,
+    "category": "เบเกอรี่ฝรั่งเศส",
+    "emoji": "🥐",
+    "tag": "คลาสใหม่",
+    "tagColor": "blue",
+    "rank": "#6",
+    "image": "https://images.unsplash.com/photo-1587080414086-57cef7f2641d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fFR3by10b25lJTIwY2hvY29sYXRlJTIwY3JvaXNzYW50JTIwbWFzdGVyY2xhc3N8ZW58MHx8MHx8fDA%3D",
+    "description": "ต่อยอดจากครัวซองต์คลาสสิก สู่การทำแป้งช็อกโกแลตทูโทนและสอดไส้ช็อกโกแลตพรีเมียม",
+    "dateText": "19 ก.ค. 2026 | 09:00 - 16:00",
+    "slots": [
+      {
+        "id": 11,
+        "slot_text": "19 ก.ค. 2026 | 09:00 - 16:00"
+      },
+      {
+        "id": 12,
+        "slot_text": "2 ส.ค. 2026 | 09:00 - 16:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 7,
+    "title": "พรีเมียมบับก้าช็อกโกแลตโฮมเมด",
+    "chef": "เชฟ ธนวัฒน์",
+    "level": "ระดับกลาง",
+    "price": 3100,
+    "bookedSeats": 2,
+    "totalSeats": 12,
+    "seatsLeft": 10,
+    "category": "ขนมปังอบ",
+    "emoji": "🍞",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#7",
+    "image": "https://images.unsplash.com/photo-1586806720715-f5a2610d78f0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fFByZW1pdW0lMjBob21lbWFkZSUyMEJhYmthJTIwY2hvY29sYXRlfGVufDB8fDB8fHww",
+    "description": "ทำขนมปังถัก Babka ไส้ช็อกโกแลตเบลเยียมเข้มข้น แป้งเหนียวนุ่มชุ่มฉ่ำเนย",
+    "dateText": "18 ก.ค. 2026 | 09:00 - 15:00",
+    "slots": [
+      {
+        "id": 13,
+        "slot_text": "18 ก.ค. 2026 | 09:00 - 15:00"
+      },
+      {
+        "id": 14,
+        "slot_text": "1 ส.ค. 2026 | 09:00 - 15:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 8,
+    "title": "ขนมปังฟอกาชเชียสมุนไพรอิตาเลียน",
+    "chef": "เชฟ ธนวัฒน์",
+    "level": "เริ่มต้น",
+    "price": 2200,
+    "bookedSeats": 3,
+    "totalSeats": 15,
+    "seatsLeft": 12,
+    "category": "ขนมปังอบ",
+    "emoji": "🍞",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#8",
+    "image": "https://plus.unsplash.com/premium_photo-1700326967545-91adcec6af2a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8SXRhbGlhbiUyMGhlcmIlMjBmb2NhY2NpYSUyMGJyZWFkfGVufDB8fDB8fHww",
+    "description": "สนุกกับการตกแต่งหน้าขนมปังฟอกาชเชียด้วยสมุนไพรสด มะเขือเทศเชอร์รี และน้ำมันมะกอกเกรดพรีเมียม",
+    "dateText": "25 ก.ค. 2026 | 10:00 - 14:00",
+    "slots": [
+      {
+        "id": 15,
+        "slot_text": "25 ก.ค. 2026 | 10:00 - 14:00"
+      },
+      {
+        "id": 16,
+        "slot_text": "8 ส.ค. 2026 | 10:00 - 14:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 9,
+    "title": "โดนัทสไตล์ญี่ปุ่นครีมสดวานิลลา",
+    "chef": "เชฟ นภัสสร",
+    "level": "เริ่มต้น",
+    "price": 2900,
+    "bookedSeats": 4,
+    "totalSeats": 12,
+    "seatsLeft": 8,
+    "category": "โดนัทและฟริตเตอร์",
+    "emoji": "🍩",
+    "tag": "คลาสใหม่",
+    "tagColor": "blue",
+    "rank": "#9",
+    "image": "https://images.unsplash.com/photo-1582215669338-6cfdb76bca45?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fEphcGFuZXNlLXN0eWxlJTIwZG9udXQlMjB3aXRoJTIwdmFuaWxsYSUyMGZyZXNoJTIwY3JlYW0ufGVufDB8fDB8fHww",
+    "description": "ตีครีมสดสไตล์ญี่ปุ่น ยัดไส้โดนัทนมสดเนื้อเบานุ่มละลายในปาก",
+    "dateText": "11 ก.ค. 2026 | 13:00 - 17:00",
+    "slots": [
+      {
+        "id": 17,
+        "slot_text": "11 ก.ค. 2026 | 13:00 - 17:00"
+      },
+      {
+        "id": 18,
+        "slot_text": "25 ก.ค. 2026 | 13:00 - 17:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 10,
+    "title": "ชีสเค้กหน้าไหม้สไตล์บาสก์เข้มข้น",
+    "chef": "เชฟ ปาริชาต",
+    "level": "เริ่มต้น",
+    "price": 3200,
+    "bookedSeats": 5,
+    "totalSeats": 10,
+    "seatsLeft": 5,
+    "category": "เค้กและขนมหวาน",
+    "emoji": "🎂",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#10",
+    "image": "https://images.unsplash.com/photo-1635327173748-5fe11b795610?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8UmljaCUyMEJhc3F1ZSUyMGJ1cm50JTIwY2hlZXNlY2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+    "description": "อบชีสเค้กหน้าไหม้เนื้อครีมชีสเนียนนุ่มกึ่งลาวา พร้อมซอสเบอร์รีโฮมเมด",
+    "dateText": "20 ก.ค. 2026 | 13:00 - 16:30",
+    "slots": [
+      {
+        "id": 19,
+        "slot_text": "20 ก.ค. 2026 | 13:00 - 16:30"
+      },
+      {
+        "id": 20,
+        "slot_text": "3 ส.ค. 2026 | 13:00 - 16:30"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 11,
+    "title": "คลาสสิกฟรุตทาร์ตสไตล์ฝรั่งเศส",
+    "chef": "เชฟ พงศธร",
+    "level": "ระดับกลาง",
+    "price": 3400,
+    "bookedSeats": 2,
+    "totalSeats": 10,
+    "seatsLeft": 8,
+    "category": "เบเกอรี่ฝรั่งเศส",
+    "emoji": "🥐",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#11",
+    "image": "https://images.unsplash.com/photo-1620980776848-84ac10194945?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Q2xhc3NpYyUyMEZyZW5jaC1zdHlsZSUyMGZydWl0JTIwdGFydHxlbnwwfHwwfHx8MA%3D%3D",
+    "description": "ทำแป้งทาร์ตกรอบร่วนสไตล์ฝรั่งเศส (Pâte Sablée) ครีมคัสตาร์ดวานิลลาแท้และผลไม้สด",
+    "dateText": "26 ก.ค. 2026 | 10:00 - 15:00",
+    "slots": [
+      {
+        "id": 21,
+        "slot_text": "26 ก.ค. 2026 | 10:00 - 15:00"
+      },
+      {
+        "id": 22,
+        "slot_text": "9 ส.ค. 2026 | 10:00 - 15:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 12,
+    "title": "ขนมปังบริยอชเนยสดฝรั่งเศส",
+    "chef": "เชฟ ธนวัฒน์",
+    "level": "ระดับกลาง",
+    "price": 2800,
+    "bookedSeats": 3,
+    "totalSeats": 12,
+    "seatsLeft": 9,
+    "category": "ขนมปังอบ",
+    "emoji": "🍞",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#12",
+    "image": "https://images.unsplash.com/photo-1552056413-b8b5eed0170b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8RnJlbmNoJTIwYnJpb2NoZSUyMGJyZWFkJTIwd2l0aCUyMGJ1dHRlcnxlbnwwfHwwfHx8MA%3D%3D",
+    "description": "เรียนรู้วิธีนวดแป้งผสมเนยสดแท้สไตล์ Brioche Nanterre ให้ได้เนื้อสัมผัสใยไหมฉีกมือหอมละมุน",
+    "dateText": "12 ก.ค. 2026 | 09:00 - 14:00",
+    "slots": [
+      {
+        "id": 23,
+        "slot_text": "12 ก.ค. 2026 | 09:00 - 14:00"
+      },
+      {
+        "id": 24,
+        "slot_text": "26 ก.ค. 2026 | 09:00 - 14:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 13,
+    "title": "ขนมปังเบเกิลสไตล์นิวยอร์ก",
+    "chef": "เชฟ ธนวัฒน์",
+    "level": "เริ่มต้น",
+    "price": 2400,
+    "bookedSeats": 1,
+    "totalSeats": 12,
+    "seatsLeft": 11,
+    "category": "ขนมปังอบ",
+    "emoji": "🍞",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#13",
+    "image": "https://plus.unsplash.com/premium_photo-1720070416636-0e5ef67d3862?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8TmV3JTIwWW9yayUyMHN0eWxlJTIwYmFnZWx8ZW58MHx8MHx8fDA%3D",
+    "description": "ฝึกทำเบเกิลเนื้อหนุบหนับตามแบบฉบับนิวยอร์กแท้ ตั้งแต่การต้มแป้งจนถึงการอบโรยงาและกระเทียม",
+    "dateText": "19 ก.ค. 2026 | 10:00 - 14:00",
+    "slots": [
+      {
+        "id": 25,
+        "slot_text": "19 ก.ค. 2026 | 10:00 - 14:00"
+      },
+      {
+        "id": 26,
+        "slot_text": "2 ส.ค. 2026 | 10:00 - 14:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 14,
+    "title": "ขนมปังนมฮอกไกโดและโชกุปัง",
+    "chef": "เชฟ ธนวัฒน์",
+    "level": "เริ่มต้น",
+    "price": 2600,
+    "bookedSeats": 0,
+    "totalSeats": 12,
+    "seatsLeft": 12,
+    "category": "ขนมปังอบ",
+    "emoji": "🍞",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#14",
+    "image": "https://thebakeanista.com/wp-content/uploads/2020/05/Japanese-Milk-Bread-Crumbs-e1604224456391-1400x800.jpg",
+    "description": "สัมผัสความนุ่มยืดแบบ Yudane เคล็ดลับขนมปังนมฮอกไกโดและโชกุปังแสนอร่อย",
+    "dateText": "27 ก.ค. 2026 | 09:00 - 13:00",
+    "slots": [
+      {
+        "id": 27,
+        "slot_text": "27 ก.ค. 2026 | 09:00 - 13:00"
+      },
+      {
+        "id": 28,
+        "slot_text": "10 ส.ค. 2026 | 09:00 - 13:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 15,
+    "title": "บาแก็ตฝรั่งเศสแบบดั้งเดิม",
+    "chef": "เชฟ ธนวัฒน์",
+    "level": "ระดับกลาง",
+    "price": 2300,
+    "bookedSeats": 0,
+    "totalSeats": 15,
+    "seatsLeft": 15,
+    "category": "ขนมปังอบ",
+    "emoji": "🍞",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#15",
+    "image": "https://plus.unsplash.com/premium_photo-1677686707023-9ac1e4f75a87?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "description": "ฝึกอบบาแก็ตฝรั่งเศสแท้ๆ (Baguette de Tradition) ให้เปลือกนอกบางกรอบ เนื้อในเหนียวนุ่มเป็นโพรงสวย",
+    "dateText": "2 ส.ค. 2026 | 09:00 - 15:00",
+    "slots": [
+      {
+        "id": 29,
+        "slot_text": "2 ส.ค. 2026 | 09:00 - 15:00"
+      },
+      {
+        "id": 30,
+        "slot_text": "16 ส.ค. 2026 | 09:00 - 15:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 16,
+    "title": "ซีบัคธอร์นซาวร์โดว์และธัญพืช",
+    "chef": "เชฟ ธนวัฒน์",
+    "level": "ระดับสูง",
+    "price": 2700,
+    "bookedSeats": 1,
+    "totalSeats": 10,
+    "seatsLeft": 9,
+    "category": "ขนมปังอบ",
+    "emoji": "🍞",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#16",
+    "image": "https://omegafruit.ca/wp-content/uploads/2024/10/Seaberry-apple-nut-bread-close-up-.jpg.webp",
+    "description": "ยกระดับซาวร์โดว์ด้วยผลซีบัคธอร์นเปรี้ยวอมหวาน และธัญพืชโฮลเกรนคั่วหอมหลากชนิด",
+    "dateText": "9 ส.ค. 2026 | 08:30 - 16:30",
+    "slots": [
+      {
+        "id": 31,
+        "slot_text": "9 ส.ค. 2026 | 08:30 - 16:30"
+      },
+      {
+        "id": 32,
+        "slot_text": "23 ส.ค. 2026 | 08:30 - 16:30"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 17,
+    "title": "ขนมปังไรย์เยอรมันคลาสสิก",
+    "chef": "เชฟ ธนวัฒน์",
+    "level": "ระดับกลาง",
+    "price": 2500,
+    "bookedSeats": 0,
+    "totalSeats": 12,
+    "seatsLeft": 12,
+    "category": "ขนมปังอบ",
+    "emoji": "🍞",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#17",
+    "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "description": "ขนมปังไรย์สไตล์เยอรมันแท้เนื้อแน่น เสริมสุขภาพด้วยเมล็ดฟักทองและดอกทานตะวัน",
+    "dateText": "16 ส.ค. 2026 | 09:00 - 14:00",
+    "slots": [
+      {
+        "id": 33,
+        "slot_text": "16 ส.ค. 2026 | 09:00 - 14:00"
+      },
+      {
+        "id": 34,
+        "slot_text": "30 ส.ค. 2026 | 09:00 - 14:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 18,
+    "title": "ซินนามอนโรลเคลือบครีมชีสฟรอสติ้ง",
+    "chef": "เชฟ นภัสสร",
+    "level": "เริ่มต้น",
+    "price": 2600,
+    "bookedSeats": 4,
+    "totalSeats": 15,
+    "seatsLeft": 11,
+    "category": "ขนมปังอบ",
+    "emoji": "🍞",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#18",
+    "image": "https://images.unsplash.com/photo-1686207855146-c3ffe2166d40?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Q2lubmFtb24lMjByb2xscyUyMGNvYXRlZCUyMHdpdGglMjBjcmVhbSUyMGNoZWVzZSUyMGZyb3N0aW5nfGVufDB8fDB8fHww",
+    "description": "ทำขนมปังซินนามอนโรลหอมอบเชยเนื้อฉ่ำ นุ่มนวล เคลือบด้วยครีมชีสฟรอสติ้งเข้มข้นรสเลิศ",
+    "dateText": "23 ส.ค. 2026 | 13:00 - 17:00",
+    "slots": [
+      {
+        "id": 35,
+        "slot_text": "23 ส.ค. 2026 | 13:00 - 17:00"
+      },
+      {
+        "id": 36,
+        "slot_text": "6 ก.ย. 2026 | 13:00 - 17:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 19,
+    "title": "บอมโบโลนีโดนัทอิตาเลียนไส้คัสตาร์ด",
+    "chef": "เชฟ นภัสสร",
+    "level": "เริ่มต้น",
+    "price": 3100,
+    "bookedSeats": 2,
+    "totalSeats": 12,
+    "seatsLeft": 10,
+    "category": "โดนัทและฟริตเตอร์",
+    "emoji": "🍩",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#19",
+    "image": "https://nombeah.com/wp-content/uploads/2024/09/Bomboloni-3.jpg.avif",
+    "description": "ฝึกปั้นและทอดบอมโบโลนี (Bomboloni) โดนัทกลมไม่มีรูสไตล์อิตาลี คลุกน้ำตาลทรายและบีบไส้ครีมคัสตาร์ดเนียนละมุน",
+    "dateText": "5 ก.ค. 2026 | 13:00 - 17:00",
+    "slots": [
+      {
+        "id": 37,
+        "slot_text": "5 ก.ค. 2026 | 13:00 - 17:00"
+      },
+      {
+        "id": 38,
+        "slot_text": "19 ก.ค. 2026 | 13:00 - 17:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 20,
+    "title": "โดนัทเค้กช็อกโกแลตสไตล์โบราณ",
+    "chef": "เชฟ นภัสสร",
+    "level": "เริ่มต้น",
+    "price": 2500,
+    "bookedSeats": 0,
+    "totalSeats": 15,
+    "seatsLeft": 15,
+    "category": "โดนัทและฟริตเตอร์",
+    "emoji": "🍩",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#20",
+    "image": "https://plus.unsplash.com/premium_photo-1672846027103-a50797886f99?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8VmludGFnZSUyMHN0eWxlJTIwY2hvY29sYXRlJTIwZG9udXQlMjBjYWtlfGVufDB8fDB8fHww",
+    "description": "โดนัทช็อกโกแลตเนื้อแน่นแบบ Old Fashioned รสเข้มข้น กรอบนอก นุ่มหนึบด้านใน",
+    "dateText": "12 ก.ค. 2026 | 13:00 - 17:00",
+    "slots": [
+      {
+        "id": 39,
+        "slot_text": "12 ก.ค. 2026 | 13:00 - 17:00"
+      },
+      {
+        "id": 40,
+        "slot_text": "26 ก.ค. 2026 | 13:00 - 17:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 21,
+    "title": "ชูร์โรสสเปนและซอสดาร์กช็อกโกแลต",
+    "chef": "เชฟ พงศธร",
+    "level": "เริ่มต้น",
+    "price": 2600,
+    "bookedSeats": 1,
+    "totalSeats": 15,
+    "seatsLeft": 14,
+    "category": "โดนัทและฟริตเตอร์",
+    "emoji": "🍩",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#21",
+    "image": "https://plus.unsplash.com/premium_photo-1713962962200-e33e90cb2c60?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8U3BhbmlzaCUyMGNodXJyb3MlMjB3aXRoJTIwZGFyayUyMGNob2NvbGF0ZSUyMHNhdWNlfGVufDB8fDB8fHww",
+    "description": "บีบและทอดปาท่องโก๋สเปน (Churros) ให้เหลืองทอง กรอบอร่อย คลุกอบเชยน้ำตาล และทำดิปร้อนดาร์กช็อกโกแลตแท้",
+    "dateText": "19 ก.ค. 2026 | 14:00 - 17:30",
+    "slots": [
+      {
+        "id": 41,
+        "slot_text": "19 ก.ค. 2026 | 14:00 - 17:30"
+      },
+      {
+        "id": 42,
+        "slot_text": "2 ส.ค. 2026 | 14:00 - 17:30"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 22,
+    "title": "ครอฟเฟิลและโมจิโดนัทสองรสชาติ",
+    "chef": "เชฟ นภัสสร",
+    "level": "เริ่มต้น",
+    "price": 2800,
+    "bookedSeats": 2,
+    "totalSeats": 12,
+    "seatsLeft": 10,
+    "category": "โดนัทและฟริตเตอร์",
+    "emoji": "🍩",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#22",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/acAwKa5qfWV5aLTExGQ-5g/o.jpg",
+    "description": "ผสมผสานครัวซองต์วาฟเฟิลสไตล์ฮิต และทำโดนัทแป้งโมจิหนุบหนับสไตล์ญี่ปุ่นเคลือบมัทฉะและสตรอว์เบอร์รี",
+    "dateText": "26 ก.ค. 2026 | 13:00 - 17:00",
+    "slots": [
+      {
+        "id": 43,
+        "slot_text": "26 ก.ค. 2026 | 13:00 - 17:00"
+      },
+      {
+        "id": 44,
+        "slot_text": "9 ส.ค. 2026 | 13:00 - 17:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 23,
+    "title": "โดนัทเคลือบเมเปิ้ลเบคอนเค็มหวาน",
+    "chef": "เชฟ นภัสสร",
+    "level": "ระดับกลาง",
+    "price": 3000,
+    "bookedSeats": 0,
+    "totalSeats": 12,
+    "seatsLeft": 12,
+    "category": "โดนัทและฟริตเตอร์",
+    "emoji": "🍩",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#23",
+    "image": "https://images.unsplash.com/photo-1585459441171-70a603cd5e46?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8U3dlZXQlMjBhbmQlMjBzYXZvcnklMjBtYXBsZSUyMGJhY29uJTIwZ2xhemVkJTIwZG9udXR8ZW58MHx8MHx8fDA%3D",
+    "description": "ทำโดนัทเคลือบไซรัปเมเปิ้ลโรยด้วยเบคอนกรอบคั่ว รสสัมผัสเค็มหวานเข้ากันอย่างลงตัวแบบคาเฟ่อเมริกา",
+    "dateText": "2 ส.ค. 2026 | 13:00 - 17:00",
+    "slots": [
+      {
+        "id": 45,
+        "slot_text": "2. ส.ค. 2026 | 13:00 - 17:00"
+      },
+      {
+        "id": 46,
+        "slot_text": "16 ส.ค. 2026 | 13:00 - 17:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 24,
+    "title": "บริยอชโดนัทไส้เลมอนเคิร์ด",
+    "chef": "เชฟ ปาริชาต",
+    "level": "ระดับกลาง",
+    "price": 3200,
+    "bookedSeats": 3,
+    "totalSeats": 10,
+    "seatsLeft": 7,
+    "category": "โดนัทและฟริตเตอร์",
+    "emoji": "🍩",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#24",
+    "image": "https://plus.unsplash.com/premium_photo-1716918179075-d81daab96c4e?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "description": "สร้างสรรค์โดนัทพรีเมียมจากแป้งบริยอชหอมเนย สอดไส้ครีมเลมอนเคิร์ดเปรี้ยวอมหวาน หอมผิวเลมอนเหลืองสดชื่น",
+    "dateText": "9. ส.ค. 2026 | 13:00 - 17:30",
+    "slots": [
+      {
+        "id": 47,
+        "slot_text": "9. ส.ค. 2026 | 13:00 - 17:30"
+      },
+      {
+        "id": 48,
+        "slot_text": "23 ส.ค. 2026 | 13:00 - 17:30"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 25,
+    "title": "สตรูปวาฟเฟิลสไตล์ดัตช์ดั้งเดิม",
+    "chef": "เชฟ นภัสสร",
+    "level": "ระดับกลาง",
+    "price": 2700,
+    "bookedSeats": 0,
+    "totalSeats": 12,
+    "seatsLeft": 12,
+    "category": "โดนัทและฟริตเตอร์",
+    "emoji": "🍩",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#25",
+    "image": "https://plus.unsplash.com/premium_photo-1664478254358-fb8ce668dca6?q=80&w=991&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "description": "ทำวาฟเฟิลแผ่นบางเฉียบสไตล์เนเธอร์แลนด์ (Stroopwafel) รีดร้อนและสอดไส้ไซรัปคาราเมลหอมเนยน้ำตาลอบเชย",
+    "dateText": "16 ส.ค. 2026 | 13:00 - 17:00",
+    "slots": [
+      {
+        "id": 49,
+        "slot_text": "16 ส.ค. 2026 | 13:00 - 17:00"
+      },
+      {
+        "id": 50,
+        "slot_text": "30 ส.ค. 2026 | 13:00 - 17:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 26,
+    "title": "โดนัทวีแกนเพื่อสุขภาพปราศจากกลูเตน",
+    "chef": "เชฟ นภัสสร",
+    "level": "เริ่มต้น",
+    "price": 2800,
+    "bookedSeats": 1,
+    "totalSeats": 12,
+    "seatsLeft": 11,
+    "category": "โดนัทและฟริตเตอร์",
+    "emoji": "🍩",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#26",
+    "image": "https://images.unsplash.com/photo-1631397833242-fc6213046352?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "description": "โดนัทอบไร้แป้งสาลีและนมเนยไข่ รสสัมผัสนุ่มเบาเพื่อสุขภาพที่ดีเคลือบน้ำตาลมะพร้าวออร์แกนิก",
+    "dateText": "23 ส.ค. 2026 | 13:00 - 17:00",
+    "slots": [
+      {
+        "id": 51,
+        "slot_text": "23 ส.ค. 2026 | 13:00 - 17:00"
+      },
+      {
+        "id": 52,
+        "slot_text": "6 ก.ย. 2026 | 13:00 - 17:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 27,
+    "title": "สตรอว์เบอร์รีชอร์ตเค้กสไตล์ญี่ปุ่น",
+    "chef": "เชฟ ปาริชาต",
+    "level": "เริ่มต้น",
+    "price": 3500,
+    "bookedSeats": 4,
+    "totalSeats": 10,
+    "seatsLeft": 6,
+    "category": "เค้กและขนมหวาน",
+    "emoji": "🎂",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#27",
+    "image": "https://images.unsplash.com/photo-1627308595171-d1b5d67129c4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8SmFwYW5lc2Utc3R5bGUlMjBzdHJhd2JlcnJ5JTIwc2hvcnRjYWtlfGVufDB8fDB8fHww",
+    "description": "เรียนรู้วิธีอบสปันจ์เค้ก (Sponge Cake) ให้เบาฟูนุ่มสไตล์โตเกียว ประกอบชั้นครีมสดและสตรอว์เบอร์รีรสฉ่ำหวาน",
+    "dateText": "12 ก.ค. 2026 | 13:00 - 17:00",
+    "slots": [
+      {
+        "id": 53,
+        "slot_text": "12. ก.ค. 2026 | 13:00 - 17:00"
+      },
+      {
+        "id": 54,
+        "slot_text": "26 ก.ค. 2026 | 13:00 - 17:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 28,
+    "title": "ช็อกโกแลตมูสลาวาและสตรอว์เบอร์รี",
+    "chef": "เชฟ พงศธร",
+    "level": "ระดับกลาง",
+    "price": 3300,
+    "bookedSeats": 1,
+    "totalSeats": 12,
+    "seatsLeft": 11,
+    "category": "เค้กและขนมหวาน",
+    "emoji": "🧁",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#28",
+    "image": "https://images.unsplash.com/photo-1621792907789-666f0e69ea03?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "description": "ทำเค้กลาวาช็อกโกแลตอุ่นๆ ไส้ไหล คู่กับมูสเบลเยียมช็อกโกแลตเนื้อเนียน และผลสตรอว์เบอร์รีสด",
+    "dateText": "19 ก.ค. 2026 | 13:00 - 16:30",
+    "slots": [
+      {
+        "id": 55,
+        "slot_text": "19 ก.ค. 2026 | 13:00 - 16:30"
+      },
+      {
+        "id": 56,
+        "slot_text": "2 ส.ค. 2026 | 13:00 - 16:30"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 29,
+    "title": "เค้กแครอทครีมชีสและถั่วพีแคน",
+    "chef": "เชฟ ปาริชาต",
+    "level": "เริ่มต้น",
+    "price": 2900,
+    "bookedSeats": 3,
+    "totalSeats": 12,
+    "seatsLeft": 9,
+    "category": "เค้กและขนมหวาน",
+    "emoji": "🎂",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#29",
+    "image": "https://plus.unsplash.com/premium_photo-1715030176164-7ba7e3298856?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "description": "เค้กแครอทเนื้อชุ่มชื้นอัดแน่นด้วยวอลนัทและลูกเกด ปาดหน้าครีมชีสรสเปรี้ยวหวานมัน ตกแต่งด้วยถั่วพีแคนคั่ว",
+    "dateText": "26 ก.ค. 2026 | 13:00 - 17:00",
+    "slots": [
+      {
+        "id": 57,
+        "slot_text": "26 ก.ค. 2026 | 13:00 - 17:00"
+      },
+      {
+        "id": 58,
+        "slot_text": "9 ส.ค. 2026 | 13:00 - 17:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 30,
+    "title": "เค้กเลมอนบลูเบอร์รีป๊อปปี้ซีด",
+    "chef": "เชฟ ปาริชาต",
+    "level": "เริ่มต้น",
+    "price": 3100,
+    "bookedSeats": 0,
+    "totalSeats": 10,
+    "seatsLeft": 10,
+    "category": "เค้กและขนมหวาน",
+    "emoji": "🎂",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#30",
+    "image": "https://plus.unsplash.com/premium_photo-1714662390452-90962d05cbf4?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "description": "เค้กเนยสดเลมอนผสมเม็ดป๊อปปี้ซีด เคี้ยวกรุบกรอบ สอดไส้ซอสบลูเบอร์รีป่าโฮมเมดราดไอซิ่งเกลซเลมอนรสเปรี้ยวหวานสะใจ",
+    "dateText": "2 ส.ค. 2026 | 13:00 - 17:00",
+    "slots": [
+      {
+        "id": 59,
+        "slot_text": "2 ส.ค. 2026 | 13:00 - 17:00"
+      },
+      {
+        "id": 60,
+        "slot_text": "16 ส.ค. 2026 | 13:00 - 17:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 31,
+    "title": "ทีรามิสุสไตล์อิตาเลียนดั้งเดิม",
+    "chef": "เชฟ พงศธร",
+    "level": "ระดับกลาง",
+    "price": 3400,
+    "bookedSeats": 3,
+    "totalSeats": 12,
+    "seatsLeft": 9,
+    "category": "เค้กและขนมหวาน",
+    "emoji": "🧁",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#31",
+    "image": "https://images.unsplash.com/photo-1704742205361-8d532d9d7e2e?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "description": "ทำทีรามิสุแสนอร่อยตามสูตรอิตาลีดั้งเดิม ตั้งแต่ทำเลดี้ฟิงเกอร์เอง ซึมซับกาแฟเอสเพรสโซ่เข้มข้นสลับชั้นมาสคาร์โปนครีมสด",
+    "dateText": "9 ส.ค. 2026 | 13:00 - 16:30",
+    "slots": [
+      {
+        "id": 61,
+        "slot_text": "9. ส.ค. 2026 | 13:00 - 16:30"
+      },
+      {
+        "id": 62,
+        "slot_text": "23 ส.ค. 2026 | 13:00 - 16:30"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 32,
+    "title": "เค้กเรดเวลเวตพรีเมียมบัตเตอร์ครีม",
+    "chef": "เชฟ ปาริชาต",
+    "level": "ระดับกลาง",
+    "price": 3200,
+    "bookedSeats": 0,
+    "totalSeats": 10,
+    "seatsLeft": 10,
+    "category": "เค้กและขนมหวาน",
+    "emoji": "🎂",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#32",
+    "image": "https://images.unsplash.com/photo-1714386148315-2f0e3eebcd5a?q=80&w=736&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "description": "เค้กกำมะหยี่สีแดงรสโกโก้อ่อนๆ สลับชั้นครีมชีสฟรอสติ้งเนียนหนานุ่ม ตกแต่งเค้กให้สวยหรูแนววิคตอเรียน",
+    "dateText": "16 ส.ค. 2026 | 13:00 - 17:00",
+    "slots": [
+      {
+        "id": 63,
+        "slot_text": "16 ส.ค. 2026 | 13:00 - 17:00"
+      },
+      {
+        "id": 64,
+        "slot_text": "30 ส.ค. 2026 | 13:00 - 17:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 33,
+    "title": "นิวยอร์กชีสเค้กซอสสตรอว์เบอร์รี",
+    "chef": "เชฟ ปาริชาต",
+    "level": "ระดับสูง",
+    "price": 3600,
+    "bookedSeats": 2,
+    "totalSeats": 10,
+    "seatsLeft": 8,
+    "category": "เค้กและขนมหวาน",
+    "emoji": "🎂",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#33",
+    "image": "https://drivemehungry.com/wp-content/uploads/2022/07/strawberry-cheesecake-8.jpg",
+    "description": "เจาะลึกเทคนิคการอบชีสเค้กแบบนิวยอร์กสตูดิโอให้หน้าเรียบเนียน เนื้อแน่นนุ่มละมุนลิ้น ราดด้วยซอสสตรอว์เบอร์รีป่ารสเปรี้ยวหวานตัดเลี่ยน",
+    "dateText": "23. ส.ค. 2026 | 13:00 - 17:30",
+    "slots": [
+      {
+        "id": 65,
+        "slot_text": "23. ส.ค. 2026 | 13:00 - 17:30"
+      },
+      {
+        "id": 66,
+        "slot_text": "6 ก.ย. 2026 | 13:00 - 17:30"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 34,
+    "title": "ชูครีมและเอแคลร์ไส้คัสตาร์ด",
+    "chef": "เชฟ ปาริชาต",
+    "level": "เริ่มต้น",
+    "price": 3000,
+    "bookedSeats": 1,
+    "totalSeats": 12,
+    "seatsLeft": 11,
+    "category": "เบเกอรี่ฝรั่งเศส",
+    "emoji": "🥐",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#34",
+    "image": "https://plus.unsplash.com/premium_photo-1764355119672-d37d2ba8efdb?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "description": "ฝึกทำแป้งพัฟชู (Choux Pastry) ให้ฟูกลวงสวย ทำครีมคัสตาร์ดกลิ่นวานิลลาฝักแท้ บีบไส้ชูครีมและราดช็อกโกแลตบนหน้าเอแคลร์",
+    "dateText": "12 ก.ค. 2026 | 10:00 - 14:00",
+    "slots": [
+      {
+        "id": 67,
+        "slot_text": "12 ก.ค. 2026 | 10:00 - 14:00"
+      },
+      {
+        "id": 68,
+        "slot_text": "26. ก.ค. 2026 | 10:00 - 14:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 35,
+    "title": "มิลเฟยพัฟพาสทรีและครีมคัสตาร์ด",
+    "chef": "เชฟ พงศธร",
+    "level": "ระดับสูง",
+    "price": 3700,
+    "bookedSeats": 2,
+    "totalSeats": 10,
+    "seatsLeft": 8,
+    "category": "เบเกอรี่ฝรั่งเศส",
+    "emoji": "🥐",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#35",
+    "image": "https://images.unsplash.com/photo-1593424731252-a846f98af7e6?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "description": "ท้าทายฝีมือกับ Mille-Feuille การพับแป้งพัฟให้บางเฉียบกรอบกรุบเป็นร้อยชั้น สอดสลับชั้นครีมมัสลินวานิลลาหอมหวานหรูหรา",
+    "dateText": "19 ก.ค. 2026 | 09:00 - 15:30",
+    "slots": [
+      {
+        "id": 69,
+        "slot_text": "19 ก.ค. 2026 | 09:00 - 15:30"
+      },
+      {
+        "id": 70,
+        "slot_text": "2 ส.ค. 2026 | 09:00 - 15:30"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 36,
+    "title": "คานเล่สไตล์บอร์โดและเหล้ารัม",
+    "chef": "เชฟ พงศธร",
+    "level": "ระดับสูง",
+    "price": 3200,
+    "bookedSeats": 0,
+    "totalSeats": 10,
+    "seatsLeft": 10,
+    "category": "เบเกอรี่ฝรั่งเศส",
+    "emoji": "🥐",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#36",
+    "image": "https://www.tasteatlas.com/images/dishes/62f83e07c05a47f9951a2dfbd32db73f.jpg?mw=1300",
+    "description": "ฝึกทำ Canelés ขนมฝรั่งเศสโบราณ อบในพิมพ์ทองแดงเคลือบไขผึ้งแท้ (Beeswax) ให้ผิวเกรียมหอมคาราเมลด้านนอก เนื้อในนุ่มฉ่ำหอมเหล้ารัมและวานิลลา",
+    "dateText": "26 ก.ค. 2026 | 09:00 - 14:00",
+    "slots": [
+      {
+        "id": 71,
+        "slot_text": "26 ก.ค. 2026 | 09:00 - 14:00"
+      },
+      {
+        "id": 72,
+        "slot_text": "9. ส.ค. 2026 | 09:00 - 14:00"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 37,
+    "title": "ฟินันเซียและมาดแลนเนยสีน้ำตาล",
+    "chef": "เชฟ ปาริชาต",
+    "level": "เริ่มต้น",
+    "price": 2900,
+    "bookedSeats": 4,
+    "totalSeats": 12,
+    "seatsLeft": 8,
+    "category": "เบเกอรี่ฝรั่งเศส",
+    "emoji": "🥐",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#37",
+    "image": "https://www.foodnetwork.com/content/dam/images/food/fullset/2011/8/11/0/MN0505H_brown-butter-madeleines_s4x3.jpg",
+    "description": "หัดเคี่ยวเนยสีน้ำตาล (Beurre Noisette) อบขนมฝรั่งเศสชิ้นจิ๋วทรงเปลือกหอยและแท่งทองให้ฟูนุ่มหอมกลิ่นถั่วคั่วตามสูตรดั้งเดิม",
+    "dateText": "2 ส.ค. 2026 | 13:00 - 16:30",
+    "slots": [
+      {
+        "id": 73,
+        "slot_text": "2 ส.ค. 2026 | 13:00 - 16:30"
+      },
+      {
+        "id": 74,
+        "slot_text": "16 ส.ค. 2026 | 13:00 - 16:30"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 38,
+    "title": "คลาสสิกแอปเปิ้ลทาร์ตตาแต็ง",
+    "chef": "เชฟ พงศธร",
+    "level": "ระดับกลาง",
+    "price": 3300,
+    "bookedSeats": 1,
+    "totalSeats": 10,
+    "seatsLeft": 9,
+    "category": "เบเกอรี่ฝรั่งเศส",
+    "emoji": "🥐",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#38",
+    "image": "https://images.unsplash.com/photo-1624299831638-82c15fcafd2b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "description": "ทำทาร์ตแอปเปิ้ลกลับหัวสไตล์ฝรั่งเศสโบราณ (Tarte Tatin) นำแอปเปิ้ลไปเคี่ยวคาราเมลก่อนหุ้มด้วยแป้งพายกรอบเหลืองอร่อย",
+    "dateText": "9 ส.ค. 2026 | 10:00 - 14:30",
+    "slots": [
+      {
+        "id": 75,
+        "slot_text": "9. ส.ค. 2026 | 10:00 - 14:30"
+      },
+      {
+        "id": 76,
+        "slot_text": "23 ส.ค. 2026 | 10:00 - 14:30"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 39,
+    "title": "ขนมปังควิญอามานเนยเค็มพรีเมียม",
+    "chef": "เชฟ พงศธร",
+    "level": "ระดับสูง",
+    "price": 3600,
+    "bookedSeats": 0,
+    "totalSeats": 10,
+    "seatsLeft": 10,
+    "category": "เบเกอรี่ฝรั่งเศส",
+    "emoji": "🥐",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#39",
+    "image": "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F43%2F2022%2F06%2F19%2F6440688-kouign-amann-Chef-John-1x1-1.jpg&q=60&c=sc&poi=auto&orient=true&h=512",
+    "description": "ห่อพับเนยเค็ม (Kouign-Amann) และน้ำตาลให้สลับร้อยชั้น สปริงเนยเยิ้มผิวเคลือบคาราเมลกรอบแสนดึงดูดใจ",
+    "dateText": "16 ส.ค. 2026 | 09:00 - 15:30",
+    "slots": [
+      {
+        "id": 77,
+        "slot_text": "16 ส.ค. 2026 | 09:00 - 15:30"
+      },
+      {
+        "id": 78,
+        "slot_text": "30 ส.ค. 2026 | 09:00 - 15:30"
+      }
+    ],
+    "isFull": false
+  },
+  {
+    "id": 40,
+    "title": "พัฟพาสทรีไส้แอปเปิ้ลฝรั่งเศส",
+    "chef": "เชฟ พงศธร",
+    "level": "ระดับกลาง",
+    "price": 3100,
+    "bookedSeats": 0,
+    "totalSeats": 12,
+    "seatsLeft": 12,
+    "category": "เบเกอรี่ฝรั่งเศส",
+    "emoji": "🥐",
+    "tag": null,
+    "tagColor": null,
+    "rank": "#40",
+    "image": "https://www.marcellinaincucina.com/wp-content/uploads/2021/04/puff-pastry-apple-tart-1-3.jpg",
+    "description": "อบพายแป้งพัฟพาสทรีสอดไส้แอปเปิ้ลซอสบดหอมหวาน (Chausson aux Pommes) สลักลายดอกไม้สวยงามแบบดั้งเดิม",
+    "dateText": "23 ส.ค. 2026 | 09:00 - 14:00",
+    "slots": [
+      {
+        "id": 79,
+        "slot_text": "23 ส.ค. 2026 | 09:00 - 14:00"
+      },
+      {
+        "id": 80,
+        "slot_text": "6 ก.ย. 2026 | 09:00 - 14:00"
+      }
+    ],
+    "isFull": false
   }
 ]
