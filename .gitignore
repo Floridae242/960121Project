@@ -1,9 +1,9 @@
 #env
 .env
 .env.*
-# keep the example template tracked (it ships with the repo for portability)
-!.env.example
-!**/.env.example
+# keep the example templates tracked (they ship with the repo for portability)
+!.env*.example
+!**/.env*.example
 
 # Logs
 /logs

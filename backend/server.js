@@ -27,9 +27,11 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
+const fs = require("fs");
 const path = require("path");
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
 
 // โหลด route handlers จากแต่ละโมดูล
 const authRoutes = require("./routes/authRoutes");
@@ -51,6 +53,31 @@ const corsOptions = process.env.NODE_ENV === "production" ? {
   credentials: true,
 };
 
+// เชื่อถือ reverse proxy ของ host (Render/Heroku/Nginx) — ให้ req.secure / HTTPS ทำงานถูก
+app.set("trust proxy", 1);
+
+// Security headers: CSP, HSTS, nosniff, frame-deny, referrer-policy ฯลฯ
+// CSP ปรับให้รองรับสิ่งที่แอปใช้: inline styles, Google Fonts, รูป Unsplash, 3D worker/blob
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      // 'wasm-unsafe-eval' จำเป็นสำหรับ Draco WASM ของโมเดล 3D (ไม่เปิด eval ทั่วไป)
+      scriptSrc: ["'self'", "'wasm-unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      // รูป workshop มาจาก stock หลายแหล่ง (unsplash, istockphoto ฯลฯ) → อนุญาต https: ทั้งหมด
+      imgSrc: ["'self'", "data:", "blob:", "https:"],
+      connectSrc: ["'self'"],
+      workerSrc: ["'self'", "blob:"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+      frameAncestors: ["'none'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false, // ไม่บล็อกรูป/asset ข้ามโดเมน (Unsplash, fonts)
+}));
+
 app.use(cors(corsOptions));
 
 // แปลง request body จาก JSON string ให้เป็น JavaScript object อัตโนมัติ
@@ -61,14 +88,15 @@ app.use("/api/auth", authRoutes);
 app.use("/api/workshops", workshopRoutes);
 app.use("/api/bookings", bookingRoutes);
 
-// Serve built frontend in production from root/dist
-app.use(express.static(CLIENT_BUILD_PATH));
-app.get("*", (req, res, next) => {
-  if (req.originalUrl.startsWith("/api")) {
-    return next();
-  }
-  res.sendFile(path.join(CLIENT_BUILD_PATH, "index.html"));
-});
+// Serve built frontend (production) — เฉพาะเมื่อมี build แล้ว
+// dev ใช้ Vite dev server แยก (port 5173) จึงข้าม block นี้เมื่อยังไม่ได้ build
+if (fs.existsSync(path.join(CLIENT_BUILD_PATH, "index.html"))) {
+  app.use(express.static(CLIENT_BUILD_PATH));
+  app.get("*", (req, res, next) => {
+    if (req.originalUrl.startsWith("/api")) return next();
+    res.sendFile(path.join(CLIENT_BUILD_PATH, "index.html"));
+  });
+}
 
 // จัดการ request ที่ไม่ตรงกับ route ใดเลย — ส่ง 404 กลับ
 app.use((req, res) => {
