@@ -9,8 +9,21 @@
 
 require("dotenv").config();
 
-if (!process.env.JWT_SECRET) {
-  console.error("FATAL: JWT_SECRET is missing from .env");
+// Zero-Config audit: ตรวจสอบ env ที่จำเป็นตั้งแต่ตอน start
+// ถ้าขาด ให้ crash อย่างมีความหมาย (ไม่ปล่อยให้ error งง ๆ ตอน query แรก)
+const requiredEnv = ["JWT_SECRET", "DB_USER", "DB_NAME"];
+const missing = requiredEnv.filter((key) => !process.env[key]);
+
+// ต้องมีอย่างน้อยหนึ่งช่องทางเชื่อมต่อ DB: socket (macOS) หรือ host (Linux/prod)
+if (!process.env.DB_SOCKET && !process.env.DB_HOST) {
+  missing.push("DB_SOCKET or DB_HOST");
+}
+
+if (missing.length > 0) {
+  console.error(
+    `FATAL: missing required environment variable(s): ${missing.join(", ")}.\n` +
+    `Copy backend/.env.example to backend/.env and fill in the values.`
+  );
   process.exit(1);
 }
 

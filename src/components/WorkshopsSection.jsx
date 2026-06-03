@@ -15,11 +15,20 @@ const CATEGORY_ICON = {
 
 const ALL = "ทั้งหมด";
 
+// ช่วงราคาสำหรับกรอง (บาท/ที่นั่ง) — base requirement: filter by keyword/price/category
+const PRICE_RANGES = [
+  { key: "all", label: "ทุกราคา", test: () => true },
+  { key: "lt3000", label: "ต่ำกว่า ฿3,000", test: (p) => p < 3000 },
+  { key: "3000-4000", label: "฿3,000–4,000", test: (p) => p >= 3000 && p <= 4000 },
+  { key: "gt4000", label: "มากกว่า ฿4,000", test: (p) => p > 4000 },
+];
+
 export default function WorkshopsSection() {
   const [workshops, setWorkshops] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [category, setCategory] = useState(ALL);
+  const [priceRange, setPriceRange] = useState("all");
   const [searchInput, setSearchInput] = useState("");
   const searchQuery = useDebounce(searchInput, 300);
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
@@ -41,14 +50,17 @@ export default function WorkshopsSection() {
     return [ALL, ...unique];
   }, [workshops]);
 
+  const activeRange = PRICE_RANGES.find((r) => r.key === priceRange) ?? PRICE_RANGES[0];
+
   const filtered = workshops.filter((w) => {
     const matchCategory = category === ALL || w.category === category;
+    const matchPrice = activeRange.test(Number(w.price));
     const q = searchQuery.trim().toLowerCase();
     const matchSearch =
       !q ||
       w.title?.toLowerCase().includes(q) ||
       w.chef?.toLowerCase().includes(q);
-    return matchCategory && matchSearch;
+    return matchCategory && matchPrice && matchSearch;
   });
 
   const handleBook = (workshop) => {
@@ -135,6 +147,33 @@ export default function WorkshopsSection() {
           ))}
         </div>
 
+        {/* Price filter chips — กรองตามช่วงราคา (base requirement) */}
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "40px", alignItems: "center" }}>
+          <span style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--wm-muted)", marginRight: "4px" }}>
+            ราคา
+          </span>
+          {PRICE_RANGES.map((range) => (
+            <button
+              key={range.key}
+              onClick={() => setPriceRange(range.key)}
+              style={{
+                padding: "6px 16px",
+                fontSize: "12px",
+                fontWeight: 600,
+                letterSpacing: "0.02em",
+                border: "1.5px solid",
+                borderColor: priceRange === range.key ? "var(--wm-red)" : "var(--wm-border)",
+                background: priceRange === range.key ? "var(--wm-red)" : "transparent",
+                color: priceRange === range.key ? "#fff" : "#888",
+                cursor: "pointer",
+                transition: "all 0.18s",
+              }}
+            >
+              {range.label}
+            </button>
+          ))}
+        </div>
+
         {loading ? (
           <div style={{ padding: "80px 0", textAlign: "center", color: "#aaa", fontSize: "14px", letterSpacing: "0.1em" }}>
             กำลังโหลด...
@@ -152,7 +191,7 @@ export default function WorkshopsSection() {
               ลองเปลี่ยนหมวดหมู่หรือคำค้นหาดูอีกครั้ง
             </p>
             <button
-              onClick={() => { setCategory(ALL); setSearchInput(""); }}
+              onClick={() => { setCategory(ALL); setPriceRange("all"); setSearchInput(""); }}
               style={{
                 padding: "10px 24px", fontSize: "12px", fontWeight: 600,
                 letterSpacing: "0.04em", border: "1.5px solid var(--wm-navy)",
