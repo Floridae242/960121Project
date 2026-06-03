@@ -41,11 +41,7 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, CalendarDays, User, Phone, CheckCircle2, Armchair } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+import { ChevronLeft, CalendarDays, User, Phone, CheckCircle2 } from "lucide-react";
 import { createBooking, fetchWorkshops, fetchWorkshopById } from "@/api/apiClient";
 
 const EMOJI_TO_ICON = {

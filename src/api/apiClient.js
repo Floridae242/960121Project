@@ -223,7 +223,7 @@ async function request(path, options = {}) {
     if (contentType && contentType.includes("application/json")) {
       try {
         json = await res.json();
-      } catch (err) {
+      } catch {
         throw new Error("การตอบกลับจากเซิร์ฟเวอร์ไม่อยู่ในรูปแบบ JSON ที่ถูกต้อง");
       }
     } else {
