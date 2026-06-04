@@ -41,6 +41,23 @@ async function create(req, res, next) {
 }
 
 /**
+ * confirm — ยืนยันการชำระเงินของการจอง (pending → confirmed)
+ * เรียกเมื่อลูกค้าชำระเงินสำเร็จ; ถ้าเลย 10 นาทีจะได้ error 410 (หมดเวลา)
+ * รับ booking_ref จาก URL param และ userId จาก JWT
+ */
+async function confirm(req, res, next) {
+  try {
+    const result = await bookingService.confirm({
+      bookingRef: req.params.ref,
+      userId: req.user.id,
+    });
+    res.json({ success: true, data: result });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
  * getMyBookings — ดึงประวัติการจองทั้งหมดของผู้ใช้ที่ login อยู่
  * ใช้ req.user.id จาก JWT โดยไม่รับ userId จาก query string
  */
@@ -53,4 +70,4 @@ async function getMyBookings(req, res, next) {
   }
 }
 
-module.exports = { create, getMyBookings };
+module.exports = { create, confirm, getMyBookings };

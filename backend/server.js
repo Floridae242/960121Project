@@ -38,6 +38,9 @@ const authRoutes = require("./routes/authRoutes");
 const workshopRoutes = require("./routes/workshopRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 
+// service สำหรับ background sweeper (ยกเลิกการจองที่ค้างชำระเกินเวลา)
+const bookingService = require("./services/bookingService");
+
 // โหลด global error handler ที่จะจับ error ทุกชนิดที่ไม่ถูก handle
 const errorHandler = require("./middleware/errorHandler");
 
@@ -91,9 +94,24 @@ app.use("/api/bookings", bookingRoutes);
 // Serve built frontend (production) — เฉพาะเมื่อมี build แล้ว
 // dev ใช้ Vite dev server แยก (port 5173) จึงข้าม block นี้เมื่อยังไม่ได้ build
 if (fs.existsSync(path.join(CLIENT_BUILD_PATH, "index.html"))) {
-  app.use(express.static(CLIENT_BUILD_PATH));
+  app.use(express.static(CLIENT_BUILD_PATH, {
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith("index.html")) {
+        // index.html ต้อง revalidate ทุกครั้ง — กัน "หน้าขาว" จาก HTML เก่าที่ชี้ asset ที่ถูกลบไปแล้ว
+        res.setHeader("Cache-Control", "no-cache");
+      } else if (filePath.includes(`${path.sep}assets${path.sep}`)) {
+        // asset ที่มี content hash ในชื่อ (Vite) — cache ยาวได้ปลอดภัย เพราะชื่อเปลี่ยนเมื่อเนื้อหาเปลี่ยน
+        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+      } else {
+        // ไฟล์ static อื่น (รูป/โมเดล/วิดีโอ ที่ไม่มี hash) — ให้ revalidate กันค้างเวอร์ชันเก่า
+        res.setHeader("Cache-Control", "no-cache");
+      }
+    },
+  }));
   app.get("*", (req, res, next) => {
     if (req.originalUrl.startsWith("/api")) return next();
+    // SPA fallback — ส่ง index.html และห้าม cache (ดูเหตุผลด้านบน)
+    res.setHeader("Cache-Control", "no-cache");
     res.sendFile(path.join(CLIENT_BUILD_PATH, "index.html"));
   });
 }
@@ -110,3 +128,18 @@ app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`Pang-La-Ong API running on http://localhost:${PORT}`);
 });
+
+// Background sweeper — ทุก 1 นาที ยกเลิกการจองที่ "ค้างชำระ" เกิน 10 นาทีอัตโนมัติ
+// (เป็นชั้นที่สองนอกเหนือจากการคำนวณ capacity ที่กรอง pending หมดเวลาออกอยู่แล้ว
+//  เพื่อให้สถานะในฐานข้อมูลสะอาดและที่นั่งถูกคืนแน่นอน)
+const SWEEP_INTERVAL_MS = 60 * 1000;
+setInterval(async () => {
+  try {
+    const cancelled = await bookingService.expireOverdue();
+    if (cancelled > 0) {
+      console.log(`[sweeper] ยกเลิกการจองที่ค้างชำระ ${cancelled} รายการ`);
+    }
+  } catch (err) {
+    console.error("[sweeper] error:", err.message);
+  }
+}, SWEEP_INTERVAL_MS);

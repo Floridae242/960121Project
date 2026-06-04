@@ -11,8 +11,11 @@ const router = express.Router();
 const bookingController = require("../controllers/bookingController");
 const { requireAuth } = require("../middleware/auth");
 
-// POST /api/bookings — สร้างการจองใหม่ (ต้อง login ก่อน)
+// POST /api/bookings — สร้างการจองใหม่ สถานะ 'pending' รอชำระเงิน (ต้อง login ก่อน)
 router.post("/", requireAuth, bookingController.create);
+
+// POST /api/bookings/:ref/confirm — ยืนยันการชำระเงิน (pending → confirmed)
+router.post("/:ref/confirm", requireAuth, bookingController.confirm);
 
 // GET /api/bookings/me — ดูประวัติการจองของตัวเอง (ต้อง login ก่อน)
 router.get("/me", requireAuth, bookingController.getMyBookings);

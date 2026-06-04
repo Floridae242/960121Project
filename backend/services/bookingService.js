@@ -9,9 +9,13 @@
 
 const db = require("../config/db");
 
+// ระยะเวลาที่ให้ลูกค้าชำระเงินก่อนการจองจะหมดอายุและถูกยกเลิกอัตโนมัติ (นาที)
+const PAYMENT_WINDOW_MINUTES = 10;
+
 /**
- * create — สร้างการจองใหม่ภายใน database transaction
+ * create — สร้างการจองใหม่ภายใน database transaction (สถานะเริ่มต้น = 'pending')
  * ใช้ SELECT ... FOR UPDATE เพื่อล็อค workshop row ป้องกัน overbooking
+ * ที่นั่งถูกจับจองไว้ชั่วคราว — ถ้าไม่ชำระเงินภายใน 10 นาทีจะถูกยกเลิกและคืนที่นั่ง
  * rollback ทันทีถ้าเกิด error ใด ๆ ในระหว่าง transaction
  */
 async function create({ userId, workshopId, slotId, seats }) {
@@ -37,12 +41,16 @@ async function create({ userId, workshopId, slotId, seats }) {
     }
     const workshop = workshops[0];
 
-    // ขั้นที่ 2: นับที่นั่งที่จองแล้วใน slot นี้ (เฉพาะ confirmed เท่านั้น)
+    // ขั้นที่ 2: นับที่นั่งที่ถูกจับจองใน slot นี้
+    //   = ที่ confirmed แล้ว + ที่ pending ที่ยัง "ไม่หมดเวลา" (ยังอยู่ในช่วง 10 นาที)
+    //   pending ที่หมดเวลาแล้วจะไม่ถูกนับ → ที่นั่งถูกปล่อยคืนทันที
     const [capacityRows] = await connection.query(
       `SELECT COALESCE(SUM(seat_count), 0) AS booked
        FROM bookings
-       WHERE workshop_id = ? AND slot_id = ? AND status = 'confirmed'`,
-      [workshopId, slotId]
+       WHERE workshop_id = ? AND slot_id = ?
+         AND (status = 'confirmed'
+              OR (status = 'pending' AND created_at > NOW() - INTERVAL ? MINUTE))`,
+      [workshopId, slotId, PAYMENT_WINDOW_MINUTES]
     );
     const currentlyBooked = Number(capacityRows[0].booked);
 
@@ -61,11 +69,11 @@ async function create({ userId, workshopId, slotId, seats }) {
     // ขั้นที่ 5: สร้าง booking reference ที่ unique โดยใช้ timestamp + userId
     const bookingRef = `BK-${Date.now()}-${userId}`;
 
-    // ขั้นที่ 6: บันทึกการจอง — ทุก value ใช้ parameterized query
+    // ขั้นที่ 6: บันทึกการจองเป็นสถานะ 'pending' (รอชำระเงิน) — ทุก value ใช้ parameterized query
     await connection.query(
       `INSERT INTO bookings
-         (booking_ref, user_id, workshop_id, slot_id, seats_json, seat_count, total_price)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+         (booking_ref, user_id, workshop_id, slot_id, seats_json, seat_count, total_price, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')`,
       [bookingRef, userId, workshopId, slotId, JSON.stringify(seats), seatCount, totalPrice]
     );
 
@@ -74,12 +82,15 @@ async function create({ userId, workshopId, slotId, seats }) {
 
     return {
       bookingId: bookingRef,
-      status: "confirmed",
+      status: "pending",
       workshopId,
       slotId,
       seats,
       seatCount,
       totalPrice,
+      // ข้อมูลสำหรับนับถอยหลังฝั่ง client
+      paymentWindowMinutes: PAYMENT_WINDOW_MINUTES,
+      expiresAt: new Date(Date.now() + PAYMENT_WINDOW_MINUTES * 60_000).toISOString(),
     };
   } catch (err) {
     // rollback ทันทีถ้าเกิด error ใด ๆ — ป้องกันข้อมูลครึ่งทาง
@@ -119,4 +130,73 @@ async function getByUserId(userId) {
   return rows.map((r) => ({ ...r, seats: JSON.parse(r.seats) }));
 }
 
-module.exports = { create, getByUserId };
+/**
+ * confirm — ยืนยันการชำระเงิน (pending → confirmed)
+ * เรียกเมื่อลูกค้าชำระเงินสำเร็จภายในเวลาที่กำหนด
+ * - ถ้าหมดเวลาแล้ว (เกิน 10 นาที) จะยกเลิกการจองและแจ้ง error 410
+ * - ตรวจ user_id เพื่อให้ยืนยันได้เฉพาะการจองของตัวเอง
+ */
+async function confirm({ bookingRef, userId }) {
+  // ดึงสถานะการจอง พร้อมตรวจว่าหมดเวลาหรือยัง (คำนวณจาก created_at)
+  const [rows] = await db.query(
+    `SELECT id, status,
+            (created_at <= NOW() - INTERVAL ? MINUTE) AS expired
+     FROM bookings
+     WHERE booking_ref = ? AND user_id = ?`,
+    [PAYMENT_WINDOW_MINUTES, bookingRef, userId]
+  );
+
+  if (rows.length === 0) {
+    const err = new Error("ไม่พบการจองนี้");
+    err.status = 404;
+    throw err;
+  }
+
+  const booking = rows[0];
+
+  // ชำระเงินไปแล้ว — คืนผลเดิม (idempotent)
+  if (booking.status === "confirmed") {
+    return { bookingId: bookingRef, status: "confirmed" };
+  }
+
+  // ถูกยกเลิกไปแล้ว
+  if (booking.status === "cancelled") {
+    const err = new Error("การจองนี้ถูกยกเลิกไปแล้ว");
+    err.status = 410; // Gone
+    throw err;
+  }
+
+  // pending แต่หมดเวลา → ยกเลิกแล้วแจ้งว่าเลยกำหนด
+  if (booking.expired) {
+    await db.query(
+      "UPDATE bookings SET status = 'cancelled' WHERE id = ? AND status = 'pending'",
+      [booking.id]
+    );
+    const err = new Error("หมดเวลาชำระเงิน การจองถูกยกเลิกและคืนที่นั่งแล้ว");
+    err.status = 410; // Gone
+    throw err;
+  }
+
+  // pending และยังไม่หมดเวลา → ยืนยันการชำระเงิน
+  await db.query(
+    "UPDATE bookings SET status = 'confirmed' WHERE id = ? AND status = 'pending'",
+    [booking.id]
+  );
+  return { bookingId: bookingRef, status: "confirmed" };
+}
+
+/**
+ * expireOverdue — ยกเลิกการจองที่ค้างชำระเกินเวลาทั้งหมด (ใช้โดย background sweeper)
+ * คืนค่า: จำนวนรายการที่ถูกยกเลิก
+ */
+async function expireOverdue() {
+  const [result] = await db.query(
+    `UPDATE bookings
+     SET status = 'cancelled'
+     WHERE status = 'pending' AND created_at <= NOW() - INTERVAL ? MINUTE`,
+    [PAYMENT_WINDOW_MINUTES]
+  );
+  return result.affectedRows || 0;
+}
+
+module.exports = { create, getByUserId, confirm, expireOverdue, PAYMENT_WINDOW_MINUTES };

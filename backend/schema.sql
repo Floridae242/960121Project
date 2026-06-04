@@ -93,7 +93,10 @@ CREATE TABLE bookings (
   seats_json   VARCHAR(255)  NOT NULL,  -- JSON array of seat IDs
   seat_count   INT           NOT NULL,
   total_price  INT           NOT NULL,  -- server-calculated, never from client
-  status       VARCHAR(20)   NOT NULL DEFAULT 'confirmed',  -- 'confirmed' | 'cancelled'
+  -- 'pending'   = จองแล้วแต่ยังไม่ชำระเงิน (จับที่นั่งไว้ชั่วคราว, หมดอายุใน 10 นาที)
+  -- 'confirmed' = ชำระเงินสำเร็จ
+  -- 'cancelled' = ถูกยกเลิก (ผู้ใช้ยกเลิก หรือหมดเวลาชำระเงิน)
+  status       VARCHAR(20)   NOT NULL DEFAULT 'confirmed',
   created_at   DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   PRIMARY KEY (id),
@@ -108,7 +111,7 @@ CREATE TABLE bookings (
 
   CONSTRAINT chk_bookings_seat_count  CHECK (seat_count > 0),
   CONSTRAINT chk_bookings_total_price CHECK (total_price > 0),
-  CONSTRAINT chk_bookings_status      CHECK (status IN ('confirmed', 'cancelled'))
+  CONSTRAINT chk_bookings_status      CHECK (status IN ('pending', 'confirmed', 'cancelled'))
 );
 
 -- -------------------------------------------------------------

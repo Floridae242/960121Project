@@ -42,7 +42,7 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, CalendarDays, User, Phone, CheckCircle2 } from "lucide-react";
-import { createBooking, fetchWorkshops, fetchWorkshopById } from "@/api/apiClient";
+import { createBooking, confirmBooking, fetchWorkshops, fetchWorkshopById } from "@/api/apiClient";
 
 const EMOJI_TO_ICON = {
   "🥐": "/icons/croissant.svg",
@@ -95,8 +95,12 @@ export default function Booking() {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [confirmed, setConfirmed] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);   // จองแล้ว (สถานะ pending รอชำระเงิน)
   const [bookingResult, setBookingResult] = useState(/** @type {BookingResult | null} */ (null));
+  const [paid, setPaid] = useState(false);             // ชำระเงินสำเร็จ (confirmed)
+  const [paymentExpired, setPaymentExpired] = useState(false); // หมดเวลาชำระเงิน
+  const [secondsLeft, setSecondsLeft] = useState(null);// เวลาที่เหลือ (วินาที)
+  const [isPaying, setIsPaying] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(/** @type {string | null} */ (null));
   const [errors, setErrors] = useState(/** @type {BookingErrors} */ ({}));
@@ -201,6 +205,39 @@ export default function Booking() {
     }
   };
 
+  // นับถอยหลังเวลาชำระเงินจาก bookingResult.expiresAt — หมดเวลาแล้วถือว่าการจองถูกยกเลิก
+  useEffect(() => {
+    if (!confirmed || paid || paymentExpired || !bookingResult?.expiresAt) return;
+    const expiry = new Date(bookingResult.expiresAt).getTime();
+    const tick = () => {
+      const remaining = Math.max(0, Math.round((expiry - Date.now()) / 1000));
+      setSecondsLeft(remaining);
+      if (remaining <= 0) setPaymentExpired(true); // ครบ 10 นาที → หมดเวลา
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [confirmed, paid, paymentExpired, bookingResult]);
+
+  // handlePayment — ชำระเงิน (จำลอง) แล้วยืนยันการจองกับ server (pending → confirmed)
+  const handlePayment = async () => {
+    if (!bookingResult?.bookingId) return;
+    setIsPaying(true);
+    try {
+      await confirmBooking(bookingResult.bookingId);
+      setPaid(true);
+    } catch (err) {
+      // server ตอบ 410 เมื่อหมดเวลา → แสดงหน้าหมดเวลา
+      setPaymentExpired(true);
+      setSubmitError(err instanceof Error ? err.message : "ชำระเงินไม่สำเร็จ");
+    } finally {
+      setIsPaying(false);
+    }
+  };
+
+  // แปลงวินาที → รูปแบบ MM:SS
+  const fmtTime = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+
   return (
     <div style={{ minHeight: "100vh", background: "var(--wm-bg)", fontFamily: "var(--font-body)" }}>
       {/* Header */}
@@ -234,6 +271,7 @@ export default function Booking() {
       <main style={{ maxWidth: "768px", margin: "0 auto", padding: "40px 16px 80px" }}>
         <AnimatePresence mode="wait">
           {confirmed ? (
+            paid ? (
             <motion.div
               key="success"
               initial={{ opacity: 0, scale: 0.95 }}
@@ -259,7 +297,7 @@ export default function Booking() {
                 <p><span style={{ color: "var(--wm-navy)", fontWeight: 700 }}>เบอร์โทร:</span> {phone}</p>
                 <p><span style={{ color: "var(--wm-navy)", fontWeight: 700 }}>ราคารวม:</span> <span style={{ color: "var(--wm-red)", fontWeight: 900 }}>฿{(selectedSeats.length * workshop?.price).toLocaleString()}</span></p>
               </div>
-              <p style={{ fontSize: "13px", color: "var(--wm-muted)" }}>ทีมงานจะติดต่อกลับเพื่อยืนยันการชำระเงิน</p>
+              <p style={{ fontSize: "13px", color: "var(--wm-muted)" }}>ชำระเงินเรียบร้อยแล้ว ✓ — ที่นั่งของคุณได้รับการยืนยัน</p>
               <Link to="/" style={{ textDecoration: "none" }}>
                 <button
                   style={{
@@ -276,6 +314,79 @@ export default function Booking() {
                 </button>
               </Link>
             </motion.div>
+            ) : paymentExpired ? (
+            /* ── หมดเวลาชำระเงิน — การจองถูกยกเลิก ── */
+            <motion.div
+              key="expired"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "64px 0", gap: "18px" }}
+            >
+              <div style={{ fontSize: "56px" }}>⌛</div>
+              <h2 style={{ fontSize: "28px", fontWeight: 900, color: "#C0392B", letterSpacing: "-0.03em" }}>
+                หมดเวลาชำระเงิน
+              </h2>
+              <p style={{ fontSize: "14px", color: "var(--wm-muted)", maxWidth: "380px", lineHeight: 1.7 }}>
+                การจอง <strong>{bookingResult?.bookingId}</strong> ถูกยกเลิก เนื่องจากไม่ได้ชำระเงินภายใน {bookingResult?.paymentWindowMinutes ?? 10} นาที — ที่นั่งถูกคืนสู่ระบบแล้ว
+              </p>
+              <button
+                onClick={() => { setConfirmed(false); setPaid(false); setPaymentExpired(false); setBookingResult(null); setSelectedSeats([]); setSubmitError(null); }}
+                style={{ marginTop: "8px", padding: "12px 32px", border: "1.5px solid var(--wm-navy)", background: "transparent", color: "var(--wm-navy)", fontSize: "13px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", cursor: "pointer" }}
+              >
+                จองใหม่อีกครั้ง
+              </button>
+            </motion.div>
+            ) : (
+            /* ── รอชำระเงิน (pending) — นับถอยหลัง 10 นาที ── */
+            <motion.div
+              key="payment"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "48px 0", gap: "16px" }}
+            >
+              <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--wm-red)" }}>
+                รอการชำระเงิน
+              </div>
+              <h2 style={{ fontSize: "26px", fontWeight: 900, color: "var(--wm-navy)", letterSpacing: "-0.03em" }}>
+                จองที่นั่งสำเร็จ — กรุณาชำระเงิน
+              </h2>
+              <div style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontSize: "56px", fontWeight: 800, lineHeight: 1,
+                color: secondsLeft !== null && secondsLeft <= 60 ? "#C0392B" : "var(--wm-navy)",
+              }}>
+                {secondsLeft !== null ? fmtTime(secondsLeft) : "10:00"}
+              </div>
+              <p style={{ fontSize: "13px", color: "var(--wm-muted)", maxWidth: "360px", lineHeight: 1.7 }}>
+                กรุณาชำระเงินภายในเวลาที่กำหนด มิฉะนั้นการจองจะถูกยกเลิกและคืนที่นั่งโดยอัตโนมัติ
+              </p>
+              <div style={{
+                background: "#fff", border: "1px solid var(--wm-border)", padding: "20px",
+                width: "100%", maxWidth: "360px", textAlign: "left",
+                display: "flex", flexDirection: "column", gap: "6px", fontSize: "14px", color: "var(--wm-muted)",
+              }}>
+                <p><span style={{ color: "var(--wm-navy)", fontWeight: 700 }}>รหัสการจอง:</span> {bookingResult?.bookingId}</p>
+                <p><span style={{ color: "var(--wm-navy)", fontWeight: 700 }}>คลาส:</span> {workshop?.title}</p>
+                <p><span style={{ color: "var(--wm-navy)", fontWeight: 700 }}>ที่นั่ง:</span> <span style={{ color: "var(--wm-navy)", fontWeight: 900 }}>{selectedSeats.join(", ")}</span></p>
+                <p><span style={{ color: "var(--wm-navy)", fontWeight: 700 }}>ราคารวม:</span> <span style={{ color: "var(--wm-red)", fontWeight: 900 }}>฿{(selectedSeats.length * (workshop?.price ?? 0)).toLocaleString()}</span></p>
+              </div>
+              {submitError && <p style={{ color: "#C0392B", fontSize: "13px" }}>{submitError}</p>}
+              <button
+                onClick={handlePayment}
+                disabled={isPaying}
+                style={{
+                  marginTop: "8px", padding: "14px 40px", background: "var(--wm-navy)", color: "#fff",
+                  border: "none", cursor: isPaying ? "not-allowed" : "pointer",
+                  fontFamily: "'Playfair Display', Georgia, serif", fontSize: "16px", fontWeight: 700, fontStyle: "italic",
+                  opacity: isPaying ? 0.7 : 1,
+                }}
+              >
+                {isPaying ? "กำลังชำระเงิน..." : "ชำระเงิน (จำลอง) →"}
+              </button>
+            </motion.div>
+            )
           ) : (
             <motion.div key="form" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               <div style={{ marginBottom: "40px" }}>

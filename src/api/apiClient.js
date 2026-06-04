@@ -302,10 +302,20 @@ export async function fetchWorkshopById(id) {
 
 // ── Bookings ──────────────────────────────────────────────────────────────────
 
+// createBooking — สร้างการจอง สถานะเริ่มต้น 'pending' (รอชำระเงิน)
+// ฝั่ง server จะคืน expiresAt/paymentWindowMinutes สำหรับนับถอยหลัง
 export async function createBooking({ workshopId, slotId, seats, name, phone }) {
   return request("/bookings", {
     method: "POST",
     body: JSON.stringify({ workshopId, slotId, seats, name, phone }),
+  });
+}
+
+// confirmBooking — ยืนยันการชำระเงิน (pending → confirmed)
+// ถ้าเลยกำหนด 10 นาที server จะตอบ error 410 (หมดเวลา)
+export async function confirmBooking(bookingRef) {
+  return request(`/bookings/${encodeURIComponent(bookingRef)}/confirm`, {
+    method: "POST",
   });
 }
 
