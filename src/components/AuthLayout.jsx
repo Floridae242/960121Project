@@ -38,19 +38,7 @@ export default function AuthLayout({ title, subtitle, children, footer }) {
         }}>
           เรียนรู้ศิลปะการทำขนมอบจากเชฟมืออาชีพ ในบรรยากาศอบอุ่นสไตล์อาร์ทิซาน
         </p>
-
-        <img
-          src="/models/room/shaded.webp"
-          alt=""
-          style={{
-            position: "absolute",
-            bottom: "-30px",
-            right: "-50px",
-            width: "400px",
-            opacity: 0.75,
-            pointerEvents: "none",
-          }}
-        />
+        
       </div>
 
       {/* Right panel — light, centered form */}
